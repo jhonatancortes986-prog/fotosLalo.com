@@ -3,343 +3,370 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LALO.COM | Agencia Publicitaria & Fotografía Profesional</title>
+    <title>LALO.COM | Agencia Publicitaria & Estudio Fotográfico</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- NAVEGACIÓN -->
+    <!-- Barra de navegación minimalista -->
     <header class="navbar">
-        <div class="nav-container">
-            <a href="#inicio" class="brand-logo-container">
-                <div class="logo-text-group">
-                    <span class="l-white">L</span><span class="l-white">A</span><span class="l-white">L</span><span class="l-white">O</span><span class="dot-fucsia">.</span><span class="c-cyan">c</span><span class="o-fucsia">o</span><span class="m-yellow">m</span>
-                </div>
-                <span class="sub-agencia">AGENCIA PUBLICITARIA</span>
+        <div class="container nav-content">
+            <a href="#inicio" class="nav-brand">
+                <span class="brand-text">Lalo<span class="dot">.</span><span class="c">c</span><span class="m">o</span><span class="y">m</span></span>
             </a>
             <nav class="nav-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#clientes">Zona Clientes</a>
                 <a href="#portafolio">Portafolio</a>
-                <a href="#zona-clientes">Descargar mis Fotos</a>
-                <a href="#panel-autor" class="btn-autor-nav">Acceso Autor</a>
+                <button type="button" id="openAuthorBtn" class="btn-author-nav">Acceso Autor</button>
             </nav>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- Sección Hero con Logo Grande -->
     <section id="inicio" class="hero">
-        <div class="hero-content">
-            <div class="hero-logo-wrapper">
-                <div class="logo-3d-huge">
-                    <span class="l-white">L</span><span class="l-white">A</span><span class="l-white">L</span><span class="l-white">O</span><span class="dot-fucsia">.</span><span class="c-cyan">c</span><span class="o-fucsia">o</span><span class="m-yellow">m</span>
+        <div class="container hero-container">
+            <div class="logo-showcase">
+                <img src="logo.png" alt="Lalo.com Agencia Publicitaria" class="main-logo" onerror="this.style.display='none'; document.getElementById('fallbackLogo').style.display='block';">
+                <div id="fallbackLogo" class="fallback-logo" style="display:none;">
+                    <h1>Lalo<span class="pink">.</span><span class="cyan">c</span><span class="magenta">o</span><span class="yellow">m</span></h1>
+                    <p>A G E N C I A &nbsp; P U B L I C I T A R I A</p>
                 </div>
-                <div class="sub-agencia-huge">A G E N C I A &nbsp; P U B L I C I T A R I A</div>
             </div>
-            <p class="hero-description">
-                Plataforma exclusiva de entrega fotográfica profesional en calidad exacta original y portafolio de alto impacto publicitario.
-            </p>
+            <p class="hero-subtitle">Fotografía profesional y producción visual. Entrega directa en resolución nativa sin pérdida de calidad.</p>
             <div class="hero-actions">
-                <a href="#zona-clientes" class="btn btn-primary">Tengo un Código de Cliente</a>
-                <a href="#portafolio" class="btn btn-outline">Ver Trabajos</a>
+                <a href="#clientes" class="btn btn-primary">Descargar mis fotos</a>
+                <a href="#portafolio" class="btn btn-outline">Ver trabajos realizados</a>
             </div>
         </div>
     </section>
 
-    <!-- ZONA DE CLIENTES (DESCARGA CON CÓDIGO) -->
-    <section id="zona-clientes" class="section-clients">
+    <!-- Sección Privada para Clientes (Acceso por Código) -->
+    <section id="clientes" class="client-section">
         <div class="container">
             <div class="section-header">
-                <span class="tag">ZONA PRIVADA</span>
-                <h2>Descarga tus Imágenes Originales</h2>
-                <p>Introduce tu código de sesión único para acceder de forma exclusiva a tus fotografías con la calidad intacta de cámara.</p>
+                <span class="badge-cmyk">ENTREGA EXCLUSIVA</span>
+                <h2>Descarga tu Sesión Fotográfica</h2>
+                <p>Ingresa el código privado otorgado por nuestro estudio para visualizar y descargar tus archivos originales intactos.</p>
             </div>
 
-            <form id="form-codigo-cliente" class="code-box">
-                <input type="text" id="input-codigo" placeholder="Ej: LALO-4829" required autocomplete="off">
-                <button type="submit" class="btn btn-primary">Desbloquear Galería</button>
-            </form>
-            <p id="mensaje-cliente" class="status-msg"></p>
-
-            <div id="galeria-cliente-resultado" class="client-gallery-wrapper hidden">
-                <div class="client-gallery-bar">
-                    <div>
-                        <h3 id="titulo-sesion-cliente">Sesión Privada</h3>
-                        <span id="meta-sesion-cliente" class="meta-info">Calidad Exacta Original</span>
-                    </div>
-                </div>
-                <div id="grid-fotos-cliente" class="photo-grid"></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- PORTAFOLIO PÚBLICO -->
-    <section id="portafolio" class="section-portfolio">
-        <div class="container">
-            <div class="section-header">
-                <span class="tag">GALERÍA DE REFERENCIA</span>
-                <h2>Nuestros Trabajos y Productos</h2>
-                <p>Descubre el estándar de calidad publicitaria y fotográfica que creamos para cada proyecto.</p>
-            </div>
-
-            <div id="grid-portafolio" class="portfolio-masonry"></div>
-        </div>
-    </section>
-
-    <!-- PANEL DE AUTOR -->
-    <section id="panel-autor" class="section-author">
-        <div class="container">
-            <div class="author-card">
-                <div class="section-header">
-                    <span class="tag">ADMINISTRACIÓN</span>
-                    <h2>Panel de Control — Autor</h2>
-                    <p>Ingresa tu clave de acceso autorizada (**Foto.lalo**) para gestionar clientes y portafolio.</p>
-                </div>
-
-                <form id="form-login-autor" class="auth-form">
-                    <input type="password" id="password-autor" placeholder="Contraseña de autor" required>
-                    <button type="submit" class="btn btn-primary">Entrar</button>
+            <div class="code-box">
+                <form id="clientCodeForm" class="code-form">
+                    <input type="text" id="clientCodeInput" placeholder="Ej: LALO-A1B2C3" required autocomplete="off">
+                    <button type="submit" class="btn btn-primary">Ver mis fotos</button>
                 </form>
-                <p id="mensaje-login" class="status-msg"></p>
+                <p id="clientError" class="error-msg"></p>
+            </div>
 
-                <div id="herramientas-autor" class="author-tools hidden">
-                    <div class="tools-grid">
-                        
-                        <!-- Subir Cliente -->
-                        <div class="tool-panel">
-                            <h3>1. Subir Sesión de Cliente</h3>
-                            <p class="tool-desc">Sube las fotos originales de la cámara. Se generará un código único para el cliente.</p>
-                            
-                            <form id="form-subir-cliente">
-                                <label>Nombre del Cliente</label>
-                                <input type="text" id="nombre-cliente" placeholder="Ej: Campaña Comercial Moda" required>
-                                
-                                <label>Archivos Originales (Sin compresión)</label>
-                                <input type="file" id="archivos-cliente" multiple accept="image/*" required class="file-input">
-                                
-                                <button type="submit" class="btn btn-primary full-width">Subir y Generar Código</button>
-                            </form>
-
-                            <div id="resultado-codigo-generado" class="generated-code-box hidden">
-                                <span>Código generado con éxito para el cliente:</span>
-                                <div class="code-display">
-                                    <strong id="codigo-creado">LALO-0000</strong>
-                                    <button type="button" id="btn-copiar-codigo" class="btn-copy">Copiar</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Subir Portafolio -->
-                        <div class="tool-panel">
-                            <h3>2. Subir Fotos de Referencia (Portafolio)</h3>
-                            <p class="tool-desc">Agrega trabajos a la galería pública para atraer nuevos clientes.</p>
-                            
-                            <form id="form-subir-portafolio">
-                                <label>Categoría</label>
-                                <select id="categoria-portafolio">
-                                    <option value="Fotografía Publicitaria">Fotografía Publicitaria</option>
-                                    <option value="Estudio & Retrato">Estudio & Retrato</option>
-                                    <option value="Productos & Comercial">Productos & Comercial</option>
-                                    <option value="Editorial">Editorial</option>
-                                </select>
-                                
-                                <label>Imágenes de Referencia</label>
-                                <input type="file" id="archivos-portafolio" multiple accept="image/*" required class="file-input">
-                                
-                                <button type="submit" class="btn btn-outline full-width">Publicar en Portafolio</button>
-                            </form>
-                            <p id="mensaje-portafolio" class="status-msg"></p>
-                        </div>
-
+            <!-- Resultados de la galería privada del cliente -->
+            <div id="clientGalleryWrapper" class="client-gallery-wrapper hidden">
+                <div class="gallery-topbar">
+                    <div>
+                        <h3 id="clientTitle">Galería del Cliente</h3>
+                        <span id="clientMeta" class="meta-text"></span>
                     </div>
+                    <button type="button" id="closeClientGallery" class="btn-text">Cerrar sesión privada</button>
                 </div>
+                <div id="clientPhotosGrid" class="photos-grid"></div>
             </div>
         </div>
     </section>
 
-    <!-- PIE DE PÁGINA -->
-    <footer class="footer">
-        <div class="container footer-content">
-            <div class="footer-brand">
-                <span class="l-white">L</span><span class="l-white">A</span><span class="l-white">L</span><span class="l-white">O</span><span class="dot-fucsia">.</span><span class="c-cyan">c</span><span class="o-fucsia">o</span><span class="m-yellow">m</span>
+    <!-- Sección Pública de Referencias / Portafolio -->
+    <section id="portafolio" class="portfolio-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="badge-cmyk">NUESTRO TRABAJO</span>
+                <h2>Portafolio & Referencias</h2>
+                <p>Una muestra de nuestras producciones publicitarias, retratos y fotografía comercial.</p>
             </div>
-            <blockquote class="motivational-quote">
-                “La publicidad persuasiva y la fotografía impecable no solo muestran lo que vendes, sino el alma y el valor real de tu marca ante el mundo.”
-            </blockquote>
-            <p class="copyright">&copy; 2026 LALO.COM Agencia Publicitaria — Todos los derechos reservados.</p>
-        </div>
-    </footer>
 
-    <!-- BOTÓN WHATSAPP FUNCIONAL (+57 3117053670) -->
-    <a href="https://wa.me/573117053670?text=Hola%20LALO.COM,%20estoy%20interesado%20en%20sus%20servicios%20de%20fotograf%C3%ADa%20y%20publicidad." 
+            <div id="portfolioGrid" class="portfolio-grid">
+                <!-- Se carga dinámicamente desde el servidor -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal / Panel Exclusivo del Autor -->
+    <div id="authorModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Panel Exclusivo del Autor</h3>
+                <button type="button" id="closeAuthorModal" class="close-btn">&times;</button>
+            </div>
+
+            <!-- Paso 1: Login del Autor -->
+            <div id="authorLoginStep">
+                <p class="modal-desc">Ingresa la clave de administrador para gestionar entregas y portafolio.</p>
+                <form id="authorLoginForm" class="stack-form">
+                    <input type="password" id="authorPasswordInput" placeholder="Contraseña de autor" required>
+                    <button type="submit" class="btn btn-primary full-width">Ingresar al Estudio</button>
+                    <p id="authorLoginError" class="error-msg"></p>
+                </form>
+            </div>
+
+            <!-- Paso 2: Subida de Fotos (Solo visible tras autenticar) -->
+            <div id="authorDashboardStep" class="hidden">
+                <div class="tabs">
+                    <button type="button" class="tab-btn active" data-tab="tabClient">Subir Fotos de Cliente</button>
+                    <button type="button" class="tab-btn" data-tab="tabPortfolio">Subir al Portafolio</button>
+                </div>
+
+                <!-- Pestaña 1: Subir entrega privada para un cliente -->
+                <div id="tabClient" class="tab-content active">
+                    <form id="uploadClientForm" class="stack-form">
+                        <label>Nombre o referencia del cliente</label>
+                        <input type="text" id="clientNameInput" placeholder="Ej: Boda Camila & Andrés / Campaña Café" required>
+                        
+                        <label>Seleccionar fotografías originales (Sin compresión)</label>
+                        <input type="file" id="clientFilesInput" accept="image/*" multiple required class="file-input">
+                        
+                        <button type="submit" class="btn btn-primary full-width">Subir y Generar Código Único</button>
+                    </form>
+
+                    <!-- Caja donde aparece el código generado -->
+                    <div id="generatedCodeBox" class="generated-code-box hidden">
+                        <p>¡Fotos subidas con calidad intacta! Entrega este código a tu cliente:</p>
+                        <div class="code-display">
+                            <span id="generatedCodeText">LALO-000000</span>
+                            <button type="button" id="copyCodeBtn" class="btn-copy">Copiar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestaña 2: Subir fotos públicas de muestra -->
+                <div id="tabPortfolio" class="tab-content hidden">
+                    <form id="uploadPortfolioForm" class="stack-form">
+                        <label>Título o categoría del trabajo</label>
+                        <input type="text" id="portfolioTitleInput" placeholder="Ej: Fotografía de Producto / Retrato Editorial" required>
+                        
+                        <label>Seleccionar imágenes de referencia</label>
+                        <input type="file" id="portfolioFilesInput" accept="image/*" multiple required class="file-input">
+                        
+                        <button type="submit" class="btn btn-primary full-width">Publicar en Portafolio</button>
+                    </form>
+                    <p id="portfolioSuccessMsg" class="success-msg"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Flotante Oficial de WhatsApp -->
+    <a href="https://wa.me/573117053670?text=Hola%20Lalo.com,%20me%20gustar%C3%ADa%20cotizar%20una%20sesi%C3%B3n%20fotogr%C3%A1fica." 
        class="whatsapp-float" 
        target="_blank" 
        rel="noopener noreferrer" 
        aria-label="Contactar por WhatsApp">
         <svg viewBox="0 0 32 32" width="28" height="28" fill="currentColor">
-            <path d="M16.004 2.667C8.64 2.667 2.667 8.64 2.667 16c0 2.352.615 4.647 1.784 6.67L2.56 29.44l6.944-1.821A13.27 13.27 0 0 0 16.004 29.333C23.368 29.333 29.34 23.36 29.34 16S23.368 2.667 16.004 2.667zm7.768 18.887c-.325.915-1.896 1.751-2.625 1.863-.672.103-1.522.146-2.456-.151-.566-.18-1.293-.42-2.226-.823-3.918-1.691-6.477-5.636-6.673-5.897-.195-.261-1.594-2.121-1.594-4.046 0-1.925 1.008-2.871 1.366-3.262.358-.391.781-.489 1.042-.489.26 0 .521.003.749.014.24.012.562-.091.879.671.325.782 1.107 2.707 1.205 2.903.098.196.163.424.033.685-.13.261-.195.424-.391.652-.195.228-.411.51-.586.685-.195.195-.399.407-.171.798.228.391 1.013 1.671 2.175 2.707 1.494 1.332 2.753 1.745 3.144 1.94.391.196.619.163.847-.098.228-.261.977-1.141 1.238-1.532.26-.391.521-.326.879-.196.358.13 2.279 1.075 2.67 1.271.391.195.651.293.749.456.097.163.097.945-.228 1.86z"/>
+            <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.958A15.905 15.905 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.31 22.606c-.39 1.1-1.932 2.014-3.166 2.28-.846.18-1.95.324-5.67-1.218-4.762-1.972-7.826-6.81-8.064-7.126-.23-.316-1.924-2.56-1.924-4.884 0-2.324 1.216-3.466 1.648-3.938.432-.472.944-.59 1.258-.59.314 0 .628.002.904.016.29.014.678-.11 1.06.808.39.944 1.33 3.246 1.448 3.482.118.236.196.512.04.826-.158.316-.236.512-.472.788-.236.276-.496.616-.708.826-.236.236-.482.492-.206.964.276.472 1.226 2.022 2.632 3.274 1.808 1.61 3.332 2.11 3.804 2.346.472.236.748.196 1.024-.118.276-.316 1.18-1.378 1.494-1.85.314-.472.628-.394 1.06-.236.432.158 2.752 1.298 3.224 1.534.472.236.786.354.904.55.118.198.118 1.142-.272 2.242z"/>
         </svg>
         <span>Contáctanos</span>
     </a>
 
-    <!-- SCRIPT DE INTERACCIÓN -->
+    <!-- Pie de Página con Frase Motivacional -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="cmyk-bar">
+                <span class="bar-c"></span>
+                <span class="bar-m"></span>
+                <span class="bar-y"></span>
+                <span class="bar-k"></span>
+            </div>
+            <blockquote class="motivational-quote">
+                "Cada instante merece ser eterno; la verdadera fotografía no solo captura la luz, sino el alma intacta de cada historia."
+            </blockquote>
+            <p class="copyright">&copy; 2026 <strong>LALO.COM</strong> — Agencia Publicitaria. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Lógica de conexión con el Backend -->
     <script>
-        let claveAutorActual = '';
+        let currentAuthorPassword = '';
 
-        async function cargarPortafolio() {
-            const res = await fetch('/api/portafolio');
-            const fotos = await res.json();
-            const grid = document.getElementById('grid-portafolio');
-
-            if (fotos.length === 0) {
-                grid.innerHTML = '<p class="empty-msg">Próximamente nuevas referencias de trabajos publicitarios.</p>';
-                return;
-            }
-
-            grid.innerHTML = fotos.map(foto => `
-                <div class="portfolio-item">
-                    <img src="${foto.url}" alt="${foto.categoria}" loading="lazy">
-                    <div class="portfolio-caption">
-                        <span>${foto.categoria}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-        cargarPortafolio();
-
-        document.getElementById('form-codigo-cliente').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const codigo = document.getElementById('input-codigo').value.trim();
-            const msg = document.getElementById('mensaje-cliente');
-            const wrapper = document.getElementById('galeria-cliente-resultado');
-
-            msg.textContent = 'Buscando sesión privada...';
-            const res = await fetch(`/api/cliente/${encodeURIComponent(codigo)}`);
-            const data = await res.json();
-
-            if (!res.ok) {
-                msg.textContent = data.error;
-                msg.style.color = '#ff6b6b';
-                wrapper.classList.add('hidden');
-                return;
-            }
-
-            msg.textContent = '';
-            wrapper.classList.remove('hidden');
-            document.getElementById('titulo-sesion-cliente').textContent = `Sesión: ${data.cliente}`;
-            document.getElementById('meta-sesion-cliente').textContent = `${data.fotos.length} archivos originales • ${data.fecha}`;
-
-            const grid = document.getElementById('grid-fotos-cliente');
-            grid.innerHTML = data.fotos.map(foto => `
-                <div class="photo-card">
-                    <div class="photo-preview">
-                        <img src="${foto.url}" alt="${foto.originalName}" loading="lazy">
-                    </div>
-                    <div class="photo-info">
-                        <div>
-                            <p class="photo-name" title="${foto.originalName}">${foto.originalName}</p>
-                            <span class="photo-size">Original • ${foto.sizeMB}</span>
+        // Cargar portafolio público al abrir la página
+        async function loadPortfolio() {
+            const grid = document.getElementById('portfolioGrid');
+            try {
+                const res = await fetch('/api/portfolio');
+                const data = await res.json();
+                if (data.portfolio && data.portfolio.length > 0) {
+                    grid.innerHTML = data.portfolio.map(item => `
+                        <div class="portfolio-card">
+                            <img src="${item.url}" alt="${item.title}" loading="lazy">
+                            <div class="portfolio-overlay">
+                                <span>${item.title}</span>
+                            </div>
                         </div>
-                        <a href="/api/descargar/clientes/${foto.filename}" class="btn-download" download>
-                            Descargar
-                        </a>
+                    `).join('');
+                } else {
+                    grid.innerHTML = '<p class="empty-msg">Próximamente nuevas producciones publicitarias en nuestro portafolio.</p>';
+                }
+            } catch (err) {
+                grid.innerHTML = '<p class="empty-msg">Inicia el servidor para visualizar el portafolio dinámico.</p>';
+            }
+        }
+
+        // Consultar galería privada del cliente
+        document.getElementById('clientCodeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const code = document.getElementById('clientCodeInput').value.trim();
+            const errorEl = document.getElementById('clientError');
+            const wrapper = document.getElementById('clientGalleryWrapper');
+            const grid = document.getElementById('clientPhotosGrid');
+
+            errorEl.textContent = '';
+
+            try {
+                const res = await fetch(`/api/client/${encodeURIComponent(code)}`);
+                const result = await res.json();
+
+                if (!result.success) {
+                    errorEl.textContent = result.message;
+                    wrapper.classList.add('hidden');
+                    return;
+                }
+
+                document.getElementById('clientTitle').textContent = `Sesión: ${result.data.clientName}`;
+                document.getElementById('clientMeta').textContent = `${result.data.photos.length} fotografías en calidad original • Fecha: ${result.data.createdAt}`;
+
+                grid.innerHTML = result.data.photos.map(photo => `
+                    <div class="photo-card">
+                        <div class="photo-preview">
+                            <img src="${photo.url}" alt="${photo.originalName}" loading="lazy">
+                        </div>
+                        <div class="photo-info">
+                            <span class="file-name" title="${photo.originalName}">${photo.originalName}</span>
+                            <span class="file-size">${photo.size} • Calidad Original</span>
+                            <a href="/api/download/${photo.filename}" class="btn-download">Descargar Original</a>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+
+                wrapper.classList.remove('hidden');
+            } catch (err) {
+                errorEl.textContent = 'Error de conexión con el servidor.';
+            }
         });
 
-        document.getElementById('form-login-autor').addEventListener('submit', async (e) => {
+        document.getElementById('closeClientGallery').addEventListener('click', () => {
+            document.getElementById('clientGalleryWrapper').classList.add('hidden');
+            document.getElementById('clientCodeInput').value = '';
+        });
+
+        // Control Modal Autor
+        const authorModal = document.getElementById('authorModal');
+        document.getElementById('openAuthorBtn').addEventListener('click', () => {
+            authorModal.classList.remove('hidden');
+        });
+        document.getElementById('closeAuthorModal').addEventListener('click', () => {
+            authorModal.classList.add('hidden');
+        });
+
+        // Autenticación del Autor (Contraseña: Foto.lalo)
+        document.getElementById('authorLoginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const password = document.getElementById('password-autor').value;
-            const msg = document.getElementById('mensaje-login');
+            const pwd = document.getElementById('authorPasswordInput').value;
+            const errEl = document.getElementById('authorLoginError');
 
             const res = await fetch('/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password })
+                body: JSON.stringify({ password: pwd })
             });
+            const data = await res.json();
 
-            if (res.ok) {
-                claveAutorActual = password;
-                document.getElementById('form-login-autor').classList.add('hidden');
-                document.getElementById('herramientas-autor').classList.remove('hidden');
-                msg.textContent = 'Acceso de autor concedido correctamente.';
-                msg.style.color = '#38bdf8';
+            if (data.success) {
+                currentAuthorPassword = pwd;
+                document.getElementById('authorLoginStep').classList.add('hidden');
+                document.getElementById('authorDashboardStep').classList.remove('hidden');
+                errEl.textContent = '';
             } else {
-                msg.textContent = 'Contraseña incorrecta.';
-                msg.style.color = '#ff6b6b';
+                errEl.textContent = 'Contraseña incorrecta. Acceso denegado.';
             }
         });
 
-        document.getElementById('form-subir-cliente').addEventListener('submit', async (e) => {
+        // Pestañas del panel de autor
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+                btn.classList.add('active');
+                document.getElementById(btn.dataset.tab).classList.remove('hidden');
+            });
+        });
+
+        // Subir fotos de cliente
+        document.getElementById('uploadClientForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const nombreCliente = document.getElementById('nombre-cliente').value;
-            const files = document.getElementById('archivos-cliente').files;
+            const clientName = document.getElementById('clientNameInput').value;
+            const files = document.getElementById('clientFilesInput').files;
             const btn = e.target.querySelector('button');
 
-            if (files.length === 0) return;
-            btn.textContent = 'Subiendo archivos...';
+            const formData = new FormData();
+            formData.append('password', currentAuthorPassword);
+            formData.append('clientName', clientName);
+            for (let i = 0; i < files.length; i++) {
+                formData.append('photos', files[i]);
+            }
+
+            btn.textContent = 'Subiendo archivos originales...';
             btn.disabled = true;
 
-            const formData = new FormData();
-            formData.append('nombreCliente', nombreCliente);
-            for (let file of files) { formData.append('fotos', file); }
-
-            const res = await fetch('/api/upload/cliente', {
+            const res = await fetch('/api/upload-client', {
                 method: 'POST',
-                headers: { 'x-admin-password': claveAutorActual, 'x-upload-type': 'clientes' },
                 body: formData
             });
-
             const data = await res.json();
-            btn.textContent = 'Subir y Generar Código';
+
+            btn.textContent = 'Subir y Generar Código Único';
             btn.disabled = false;
 
             if (data.success) {
-                document.getElementById('codigo-creado').textContent = data.codigo;
-                document.getElementById('resultado-codigo-generado').classList.remove('hidden');
+                document.getElementById('generatedCodeText').textContent = data.code;
+                document.getElementById('generatedCodeBox').classList.remove('hidden');
                 e.target.reset();
             }
         });
 
-        document.getElementById('btn-copiar-codigo').addEventListener('click', () => {
-            const codigo = document.getElementById('codigo-creado').textContent;
-            navigator.clipboard.writeText(codigo);
-            document.getElementById('btn-copiar-codigo').textContent = '¡Copiado!';
-            setTimeout(() => { document.getElementById('btn-copiar-codigo').textContent = 'Copiar'; }, 2000);
+        // Copiar código generado
+        document.getElementById('copyCodeBtn').addEventListener('click', () => {
+            const code = document.getElementById('generatedCodeText').textContent;
+            navigator.clipboard.writeText(code);
+            document.getElementById('copyCodeBtn').textContent = '¡Copiado!';
+            setTimeout(() => document.getElementById('copyCodeBtn').textContent = 'Copiar', 2000);
         });
 
-        document.getElementById('form-subir-portafolio').addEventListener('submit', async (e) => {
+        // Subir fotos al portafolio público
+        document.getElementById('uploadPortfolioForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const categoria = document.getElementById('categoria-portafolio').value;
-            const files = document.getElementById('archivos-portafolio').files;
-            const msg = document.getElementById('mensaje-portafolio');
-            const btn = e.target.querySelector('button');
-
-            btn.textContent = 'Publicando...';
-            btn.disabled = true;
+            const title = document.getElementById('portfolioTitleInput').value;
+            const files = document.getElementById('portfolioFilesInput').files;
+            const msg = document.getElementById('portfolioSuccessMsg');
 
             const formData = new FormData();
-            formData.append('categoria', categoria);
-            for (let file of files) { formData.append('fotos', file); }
+            formData.append('password', currentAuthorPassword);
+            formData.append('title', title);
+            for (let i = 0; i < files.length; i++) {
+                formData.append('photos', files[i]);
+            }
 
-            const res = await fetch('/api/upload/portafolio', {
+            const res = await fetch('/api/upload-portfolio', {
                 method: 'POST',
-                headers: { 'x-admin-password': claveAutorActual, 'x-upload-type': 'portafolio' },
                 body: formData
             });
+            const data = await res.json();
 
-            btn.textContent = 'Publicar en Portafolio';
-            btn.disabled = false;
-
-            if (res.ok) {
-                msg.textContent = '¡Foto de referencia publicada con éxito!';
-                msg.style.color = '#38bdf8';
+            if (data.success) {
+                msg.textContent = '¡Fotografías publicadas en el portafolio!';
                 e.target.reset();
-                cargarPortafolio();
+                loadPortfolio();
             }
         });
+
+        loadPortfolio();
     </script>
 </body>
 </html>
