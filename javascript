@@ -10,15 +10,14 @@ const PORT = 3000;
 const uploadsDir = path.join(__dirname, 'uploads');
 const dbPath = path.join(__dirname, 'database.json');
 
-// Crear carpeta de subidas si no existe
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Inicializar base de datos local con contraseña por defecto: Foto.lalo
+// Inicializar base de datos sin contraseña (vacía para que tú la configures)
 if (!fs.existsSync(dbPath)) {
     const initialData = {
-        authorPassword: 'Foto.lalo',
+        authorPassword: '',
         clients: {},
         portfolio: []
     };
@@ -26,16 +25,14 @@ if (!fs.existsSync(dbPath)) {
 }
 
 function readDB() {
-    const data = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
-    if (!data.authorPassword) data.authorPassword = 'Foto.lalo';
-    return data;
+    return JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 }
 
 function writeDB(data) {
     fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
 }
 
-// Almacenamiento Multer (Conserva el archivo original 100% intacto)
+// Multer: Guarda la foto con calidad intacta (sin compresión)
 const storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, uploadsDir),
     filename: (req, file, cb) => {
@@ -47,41 +44,51 @@ const storage = multer.diskStorage({
 
 const upload = multer({
     storage: storage,
-    limits: { fileSize: 150 * 1024 * 1024 } // Hasta 150 MB por fotografía
+    limits: { fileSize: 200 * 1024 * 1024 } // Soporta archivos pesados de cámaras profesionales (hasta 200MB)
 });
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(uploadsDir));
 
-// 1. Iniciar sesión como Autor
+// Comprobar si hay contraseña configurada
+app.get('/api/check-password-status', (req, res) => {
+    const db = readDB();
+    res.json({ success: true, hasPassword: !!db.authorPassword && db.authorPassword.trim() !== '' });
+});
+
+// Configurar o cambiar contraseña
+app.post('/api/set-password', (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+    const db = readDB();
+
+    if (db.authorPassword && db.authorPassword.trim() !== '' && currentPassword !== db.authorPassword) {
+        return res.status(401).json({ success: false, message: 'La contraseña actual es incorrecta.' });
+    }
+
+    if (!newPassword || newPassword.trim().length < 3) {
+        return res.status(400).json({ success: false, message: 'La contraseña debe tener al menos 3 caracteres.' });
+    }
+
+    db.authorPassword = newPassword.trim();
+    writeDB(db);
+    res.json({ success: true, message: '¡Contraseña guardada correctamente!' });
+});
+
+// Iniciar sesión de autor
 app.post('/api/login', (req, res) => {
     const { password } = req.body;
     const db = readDB();
+    if (!db.authorPassword) {
+        return res.status(400).json({ success: false, message: 'Aún no has configurado una contraseña. Establécela primero.' });
+    }
     if (password === db.authorPassword) {
         return res.json({ success: true });
     }
     return res.status(401).json({ success: false, message: 'Contraseña incorrecta.' });
 });
 
-// 2. Cambiar contraseña del Autor desde la web
-app.post('/api/change-password', (req, res) => {
-    const { currentPassword, newPassword } = req.body;
-    const db = readDB();
-
-    if (currentPassword !== db.authorPassword) {
-        return res.status(401).json({ success: false, message: 'La contraseña actual no es correcta.' });
-    }
-    if (!newPassword || newPassword.trim().length < 4) {
-        return res.status(400).json({ success: false, message: 'La nueva contraseña debe tener al menos 4 caracteres.' });
-    }
-
-    db.authorPassword = newPassword.trim();
-    writeDB(db);
-    res.json({ success: true, message: 'Contraseña actualizada correctamente.' });
-});
-
-// 3. Subir fotografías de cliente y generar código único
+// Subir fotos de cliente y generar código único
 app.post('/api/upload-client', upload.array('photos', 100), (req, res) => {
     const { password, clientName } = req.body;
     const db = readDB();
@@ -90,7 +97,7 @@ app.post('/api/upload-client', upload.array('photos', 100), (req, res) => {
         return res.status(401).json({ success: false, message: 'No autorizado.' });
     }
     if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ success: false, message: 'Debes seleccionar al menos una imagen.' });
+        return res.status(400).json({ success: false, message: 'Selecciona al menos una foto.' });
     }
 
     const code = 'LALO-' + crypto.randomBytes(3).toString('hex').toUpperCase();
@@ -109,26 +116,22 @@ app.post('/api/upload-client', upload.array('photos', 100), (req, res) => {
     };
 
     writeDB(db);
-    res.json({ success: true, code, client: db.clients[code] });
+    res.json({ success: true, code });
 });
 
-// 4. Obtener lista de clientes creados (solo para el autor)
+// Listar clientes para autor
 app.post('/api/admin/clients', (req, res) => {
     const { password } = req.body;
     const db = readDB();
-    if (password !== db.authorPassword) {
-        return res.status(401).json({ success: false });
-    }
+    if (password !== db.authorPassword) return res.status(401).json({ success: false });
     res.json({ success: true, clients: Object.values(db.clients) });
 });
 
-// 5. Eliminar sesión de un cliente (solo autor)
+// Eliminar cliente
 app.post('/api/admin/delete-client', (req, res) => {
     const { password, code } = req.body;
     const db = readDB();
-    if (password !== db.authorPassword) {
-        return res.status(401).json({ success: false });
-    }
+    if (password !== db.authorPassword) return res.status(401).json({ success: false });
     if (db.clients[code]) {
         db.clients[code].photos.forEach(p => {
             const fp = path.join(uploadsDir, p.filename);
@@ -140,23 +143,18 @@ app.post('/api/admin/delete-client', (req, res) => {
     res.json({ success: true });
 });
 
-// 6. Subir fotos públicas al portafolio
+// Subir fotos al portafolio público
 app.post('/api/upload-portfolio', upload.array('photos', 30), (req, res) => {
     const { password, title } = req.body;
     const db = readDB();
-
-    if (password !== db.authorPassword) {
-        return res.status(401).json({ success: false, message: 'No autorizado.' });
-    }
-    if (!req.files || req.files.length === 0) {
-        return res.status(400).json({ success: false, message: 'Selecciona imágenes para el portafolio.' });
-    }
+    if (password !== db.authorPassword) return res.status(401).json({ success: false, message: 'No autorizado.' });
+    if (!req.files || req.files.length === 0) return res.status(400).json({ success: false });
 
     req.files.forEach(file => {
         db.portfolio.unshift({
             id: crypto.randomBytes(4).toString('hex'),
             filename: file.filename,
-            title: title || 'Producción Publicitaria',
+            title: title || 'Trabajo Publicitario',
             url: `/uploads/${file.filename}`
         });
     });
@@ -165,19 +163,17 @@ app.post('/api/upload-portfolio', upload.array('photos', 30), (req, res) => {
     res.json({ success: true });
 });
 
-// 7. Obtener portafolio público
+// Obtener portafolio
 app.get('/api/portfolio', (req, res) => {
     const db = readDB();
     res.json({ success: true, portfolio: db.portfolio });
 });
 
-// 8. Eliminar foto del portafolio (solo autor)
+// Eliminar foto del portafolio
 app.post('/api/admin/delete-portfolio', (req, res) => {
     const { password, id } = req.body;
     const db = readDB();
-    if (password !== db.authorPassword) {
-        return res.status(401).json({ success: false });
-    }
+    if (password !== db.authorPassword) return res.status(401).json({ success: false });
     const index = db.portfolio.findIndex(item => item.id === id);
     if (index !== -1) {
         const fp = path.join(uploadsDir, db.portfolio[index].filename);
@@ -188,24 +184,20 @@ app.post('/api/admin/delete-portfolio', (req, res) => {
     res.json({ success: true });
 });
 
-// 9. Consultar galería privada de cliente por código
+// Ver fotos de cliente mediante código
 app.get('/api/client/:code', (req, res) => {
     const code = req.params.code.trim().toUpperCase();
     const db = readDB();
     const client = db.clients[code];
-
-    if (!client) {
-        return res.status(404).json({ success: false, message: 'El código ingresado no existe o no tiene fotos asignadas.' });
-    }
+    if (!client) return res.status(404).json({ success: false, message: 'Código no válido o inexistente.' });
     res.json({ success: true, data: client });
 });
 
-// 10. Descarga directa sin recomprimir (Calidad 100% original)
+// Descarga en calidad original exacta
 app.get('/api/download/:filename', (req, res) => {
     const filename = path.basename(req.params.filename);
     const originalName = req.query.name || filename;
     const filePath = path.join(uploadsDir, filename);
-
     if (fs.existsSync(filePath)) {
         res.download(filePath, originalName);
     } else {
@@ -214,7 +206,5 @@ app.get('/api/download/:filename', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`==================================================`);
-    console.log(`  LALO.COM funcionando en http://localhost:${PORT}`);
-    console.log(`==================================================`);
+    console.log(`Servidor de LALO.COM corriendo en http://localhost:${PORT}`);
 });

@@ -1,7 +1,9 @@
-lalo-fotografia/
+lalo-com/
+├── public/
+│   ├── index.html
+│   ├── style.css
+│   └── logo.png        <-- Tu imagen de logo (asegúrate de guardarla aquí)
+├── uploads/            <-- Se crea solo para guardar las fotos originales
+├── database.json       <-- Se crea solo para guardar contraseñas y códigos
 ├── package.json
-├── server.js
-├── uploads/             <-- (Se creará automáticamente para guardar tus fotos originales)
-└── public/
-    ├── index.html
-    └── style.css
+└── server.js
