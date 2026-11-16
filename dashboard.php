@@ -1,0 +1,14 @@
+<?php
+require_once __DIR__ . '/../config/auth.php'; require_admin();
+$albums = $pdo->query('SELECT a.id,a.client_name,a.client_email,a.token,a.created_at,COUNT(p.id) photo_count FROM albums a LEFT JOIN photos p ON p.album_id=a.id GROUP BY a.id ORDER BY a.created_at DESC')->fetchAll();
+?>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panel | LALO.COM</title><link rel="stylesheet" href="../assets/css/style.css"></head><body class="panel-body"><main class="panel-wrap">
+<div class="panel-top"><a class="brand" href="../index.php">LALO<span>.</span>COM</a><div class="inline-actions"><span class="help"><?=htmlspecialchars($_SESSION['admin_email'])?></span><a class="small-button" href="logout.php">Cerrar sesión</a></div></div>
+<section class="panel-card"><p class="eyebrow">ADMINISTRACIÓN</p><h1>Tu espacio creativo.</h1><p class="help">Crea una galería privada y comparte su enlace con el cliente.</p></section>
+<section class="panel-card"><h2>Crear nueva galería</h2><form action="upload.php" method="post" enctype="multipart/form-data"><input type="hidden" name="csrf" value="<?=htmlspecialchars(csrf_token())?>"><div class="form-grid">
+<label class="form-group">Nombre del cliente<input class="field" name="client_name" maxlength="120" required></label>
+<label class="form-group">Correo del cliente (opcional)<input class="field" type="email" name="client_email" maxlength="190"></label>
+<label class="form-group full">Fotografías (JPG, PNG o WebP)<input class="field" type="file" name="photos[]" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple required><span class="help">Se guardan los archivos originales sin redimensionarlos ni recomprimirlos. Máximo 50 MB por fotografía.</span></label>
+</div><button class="button button-dark" style="margin-top:20px" type="submit">Crear galería y subir fotos →</button></form></section>
+<section class="panel-card"><h2>Galerías creadas</h2><?php if(!$albums):?><p class="empty">Todavía no has creado galerías.</p><?php else:?><div style="overflow-x:auto"><table class="album-list"><thead><tr><th>Cliente</th><th>Fotos</th><th>Fecha</th><th>Enlace privado</th></tr></thead><tbody><?php foreach($albums as $a):$url='../clientes/galeria.php?token='.urlencode($a['token']);?><tr><td><?=htmlspecialchars($a['client_name'])?></td><td><?=$a['photo_count']?></td><td><?=htmlspecialchars(date('d/m/Y',strtotime($a['created_at'])))?></td><td class="album-url"><a target="_blank" rel="noopener" href="<?=$url?>">Abrir galería ↗</a><br><small><?=htmlspecialchars($a['token'])?></small></td></tr><?php endforeach;?></tbody></table></div><?php endif;?></section>
+</main></body></html>
