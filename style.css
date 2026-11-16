@@ -1,0 +1,56 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lalo.com | Agencia Publicitaria & Fotografía Sin Compresión</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="#" class="brand-logo" aria-label="Lalo.com Agencia Publicitaria">
+            <div class="brand-main">
+                <span class="l-white">Lalo</span><span class="l-magenta">.</span><span class="l-cyan">c</span><span class="l-magenta">o</span><span class="l-yellow">m</span>
+            </div>
+            <span class="brand-sub">A G E N C I A &nbsp; P U B L I C I T A R I A</span>
+        </a>
+        <nav>
+            <a href="#galeria">Galería</a>
+            <a href="#admin" class="btn-nav">Acceso Exclusivo</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-glow glow-cyan"></div>
+        <div class="hero-glow glow-magenta"></div>
+        <div class="hero-glow glow-yellow"></div>
+        <div class="hero-content">
+            <div class="cmyk-bar">
+                <span class="dot-c"></span>
+                <span class="dot-m"></span>
+                <span class="dot-y"></span>
+                <span class="dot-k"></span>
+            </div>
+            <span class="badge">CALIDAD NATIVA • 100% SIN COMPRESIÓN</span>
+            <h1>Cada píxel conserva<br>el impacto de tu marca</h1>
+            <p>Plataforma privada de <strong>Lalo.com Agencia Publicitaria</strong>. Visualiza y descarga tus sesiones fotográficas profesionales con la resolución exacta de cámara, sin pérdida de color ni algoritmos de compresión.</p>
+            <div class="hero-actions">
+                <a href="#galeria" class="btn-primary">Ver Entregas</a>
+                <a href="#admin" class="btn-secondary">Subir Fotografías</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="admin" class="admin-panel">
+        <div class="container">
+            <div class="admin-card">
+                <div class="cmyk-top-border"></div>
+                <div class="admin-header">
+                    <span class="lock-badge">🔒 PANEL PRIVADO DEL FOTÓGRAFO</span>
+                    <h2>Carga de Archivos Maestros</h2>
+                    <p>Acceso exclusivo para administración de L
