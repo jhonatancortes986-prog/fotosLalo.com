@@ -1,486 +1,1787 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LALO.COM | Agencia Publicitaria & Estudio Fotográfico</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lalo.com | Agencia Publicitaria, Fotografía & Estudio Visual Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <!-- Three.js para el Personaje 3D Interactivo -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #07090e;
+      --bg-card: #0f131f;
+      --bg-glass: rgba(15, 19, 31, 0.82);
+      --cyan: #00e5ff;
+      --magenta: #ff007f;
+      --yellow: #ffd600;
+      --white: #ffffff;
+      --text-muted: #8c9bae;
+      --border-glass: rgba(255, 255, 255, 0.12);
+      --gradient-cmy: linear-gradient(135deg, #00e5ff 0%, #ff007f 50%, #ffd600 100%);
+      --shadow-glow: 0 10px 35px rgba(0, 229, 255, 0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--white);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    h1, h2, h3, h4, .logo-3d { font-family: 'Montserrat', sans-serif; }
+
+    .bg-animated-canvas {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(circle at 10% 15%, rgba(0, 229, 255, 0.09), transparent 45%),
+                  radial-gradient(circle at 90% 25%, rgba(255, 0, 127, 0.09), transparent 45%),
+                  radial-gradient(circle at 50% 90%, rgba(255, 214, 0, 0.07), transparent 50%);
+      animation: bgPulse 14s ease-in-out infinite alternate;
+    }
+    @keyframes bgPulse {
+      0% { transform: scale(1) rotate(0deg); }
+      100% { transform: scale(1.08) rotate(1.5deg); }
+    }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+
+    /* NAVBAR */
+    .navbar {
+      position: sticky; top: 0; z-index: 900;
+      background: rgba(7, 9, 14, 0.9);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-glass);
+      padding: 14px 0;
+    }
+    .nav-content { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+    .brand-logo { text-decoration: none; display: flex; flex-direction: column; }
+    .logo-3d { font-size: 1.9rem; font-weight: 900; letter-spacing: -1px; line-height: 1; }
+    .l-white { color: #fff; }
+    .l-cyan { color: var(--cyan); text-shadow: 0 0 14px rgba(0,229,255,0.7); }
+    .l-magenta { color: var(--magenta); text-shadow: 0 0 14px rgba(255,0,127,0.7); }
+    .l-yellow { color: var(--yellow); text-shadow: 0 0 14px rgba(255,214,0,0.7); }
+    .logo-sub { font-size: 0.65rem; letter-spacing: 3px; color: var(--text-muted); font-weight: 700; }
+
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-item {
+      color: #cbd5e1; text-decoration: none; font-size: 0.92rem; font-weight: 600;
+      transition: 0.3s; position: relative;
+    }
+    .nav-item:hover { color: var(--cyan); }
+    .highlight-nav {
+      background: rgba(0, 229, 255, 0.12); border: 1px solid rgba(0, 229, 255, 0.4);
+      padding: 6px 14px; border-radius: 20px; color: var(--cyan);
+    }
+
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .icon-btn {
+      position: relative; background: var(--bg-card); border: 1px solid var(--border-glass);
+      color: #fff; width: 44px; height: 44px; border-radius: 12px; cursor: pointer;
+      display: grid; place-items: center; font-size: 1.15rem; transition: 0.3s;
+    }
+    .icon-btn:hover { border-color: var(--cyan); transform: translateY(-2px); }
+    .badge {
+      position: absolute; top: -6px; right: -6px; background: var(--magenta);
+      color: #fff; font-size: 0.72rem; font-weight: 800; padding: 2px 7px; border-radius: 99px;
+    }
+    .btn-admin-trigger {
+      background: linear-gradient(135deg, #182033, #0f1422);
+      border: 1px solid rgba(255, 214, 0, 0.45); color: var(--yellow);
+      padding: 9px 16px; border-radius: 12px; font-weight: 700; font-size: 0.88rem;
+      cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.3s;
+    }
+    .btn-admin-trigger:hover { background: var(--yellow); color: #000; }
+
+    /* BOTONES */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 24px; border-radius: 12px; font-weight: 700; font-size: 0.95rem;
+      cursor: pointer; border: none; text-decoration: none; transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background: var(--gradient-cmy); color: #07090e; font-weight: 800;
+      box-shadow: 0 6px 22px rgba(255, 0, 127, 0.35);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(0, 229, 255, 0.5); }
+    .btn-outline { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.22); color: #fff; }
+    .btn-outline:hover { border-color: var(--cyan); background: rgba(0,229,255,0.1); }
+    .btn-cyan { background: var(--cyan); color: #000; }
+    .btn-ghost { background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted); }
+    .btn-sm { padding: 8px 14px; font-size: 0.82rem; border-radius: 9px; }
+    .btn-block { width: 100%; }
+
+    /* HERO */
+    .hero { padding: 80px 0 70px; position: relative; }
+    .hero-grid { display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 40px; align-items: center; }
+    .pill-tag {
+      display: inline-block; padding: 6px 14px; border-radius: 99px;
+      background: rgba(0, 229, 255, 0.12); border: 1px solid rgba(0, 229, 255, 0.35);
+      color: var(--cyan); font-size: 0.8rem; font-weight: 800; letter-spacing: 1.2px; margin-bottom: 18px;
+    }
+    .hero h1 { font-size: 3rem; line-height: 1.15; font-weight: 900; margin-bottom: 20px; }
+    .text-gradient-cmy {
+      background: var(--gradient-cmy); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 28px; }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 32px; }
+    .hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .stat {
+      background: var(--bg-glass); border: 1px solid var(--border-glass);
+      padding: 16px; border-radius: 16px; backdrop-filter: blur(12px);
+    }
+    .stat strong { display: block; color: var(--cyan); font-size: 1rem; }
+    .stat span { font-size: 0.8rem; color: var(--text-muted); }
+
+    .glass-showcase {
+      background: var(--bg-glass); border: 1px solid var(--border-glass);
+      border-radius: 26px; padding: 26px; backdrop-filter: blur(18px);
+      box-shadow: var(--shadow-glow); animation: floatCard 6s ease-in-out infinite;
+    }
+    @keyframes floatCard {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    .showcase-header { display: flex; align-items: center; gap: 8px; margin-bottom: 22px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; }
+    .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+    .showcase-logo-box {
+      text-align: center; padding: 32px 18px; border-radius: 20px;
+      background: radial-gradient(circle, rgba(255,0,127,0.18), rgba(0,229,255,0.08));
+      border: 1px dashed rgba(255,255,255,0.18); margin-bottom: 20px;
+    }
+    .floating-brand { font-size: 2.8rem; font-weight: 900; }
+    .mini-card {
+      display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.04);
+      padding: 14px 18px; border-radius: 16px; margin-top: 12px;
+    }
+    .mini-card i { font-size: 1.6rem; }
+    .c-cyan { color: var(--cyan); } .c-magenta { color: var(--magenta); } .c-yellow { color: var(--yellow); }
+
+    /* SECCIONES Y CATÁLOGOS */
+    .section { padding: 80px 0; }
+    .section-head { margin-bottom: 44px; }
+    .section-head.center { text-align: center; max-width: 820px; margin-left: auto; margin-right: auto; }
+    .section-tag {
+      color: var(--magenta); font-weight: 800; font-size: 0.82rem;
+      letter-spacing: 2.2px; text-transform: uppercase; display: block; margin-bottom: 10px;
+    }
+    .section-head h2 { font-size: 2.4rem; font-weight: 900; margin-bottom: 14px; }
+    .section-head p { color: var(--text-muted); }
+
+    .store-filter-bar {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 38px;
+    }
+    .store-filter-btn {
+      background: var(--bg-card); border: 1px solid var(--border-glass); color: #fff;
+      padding: 10px 20px; border-radius: 99px; font-weight: 600; font-size: 0.88rem;
+      cursor: pointer; transition: 0.3s;
+    }
+    .store-filter-btn.active, .store-filter-btn:hover {
+      background: var(--gradient-cmy); color: #000; border-color: transparent; font-weight: 800;
+    }
+
+    .products-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 26px;
+    }
+    .product-card {
+      background: var(--bg-card); border: 1px solid var(--border-glass);
+      border-radius: 22px; overflow: hidden; display: flex; flex-direction: column;
+      transition: all 0.35s ease; position: relative;
+    }
+    .product-card:hover {
+      transform: translateY(-7px); border-color: var(--cyan);
+      box-shadow: 0 16px 36px rgba(0, 229, 255, 0.18);
+    }
+    .product-img-wrap {
+      position: relative; height: 225px; overflow: hidden; cursor: pointer; background: #0a0e17;
+    }
+    .product-img-wrap img {
+      width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;
+    }
+    .product-card:hover .product-img-wrap img { transform: scale(1.09); }
+    .gallery-count-badge {
+      position: absolute; bottom: 12px; right: 12px;
+      background: rgba(7, 9, 14, 0.88); backdrop-filter: blur(8px);
+      border: 1px solid var(--cyan); color: var(--cyan);
+      padding: 5px 12px; border-radius: 99px; font-size: 0.76rem; font-weight: 700;
+    }
+    .cat-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: rgba(255, 0, 127, 0.92); color: #fff;
+      padding: 5px 12px; border-radius: 9px; font-size: 0.74rem; font-weight: 800;
+    }
+    .product-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+    .product-body h3 { font-size: 1.18rem; margin-bottom: 8px; }
+    .product-body p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 16px; flex: 1; }
+    .product-price { font-size: 1.3rem; font-weight: 900; color: var(--yellow); margin-bottom: 16px; }
+    .product-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* ZONA CLIENTES */
+    .vault-access-box {
+      max-width: 650px; margin: 0 auto; background: var(--bg-card);
+      border: 1px solid rgba(0, 229, 255, 0.35); padding: 32px; border-radius: 24px;
+    }
+    .code-form { display: flex; gap: 12px; flex-wrap: wrap; }
+    .input-icon-wrap {
+      flex: 1; display: flex; align-items: center; gap: 12px;
+      background: #07090e; border: 1px solid var(--border-glass);
+      padding: 0 16px; border-radius: 14px; min-width: 240px;
+    }
+    .input-icon-wrap input {
+      background: transparent; border: none; color: #fff; width: 100%; padding: 15px 0; outline: none; font-size: 1.02rem;
+    }
+    .vault-security-note { margin-top: 14px; font-size: 0.85rem; color: var(--cyan); text-align: center; }
+
+    /* MODALES */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px); z-index: 2000;
+      display: flex; align-items: center; justify-content: center; padding: 18px;
+    }
+    .modal-backdrop.hidden, .hidden { display: none !important; }
+    .modal-panel {
+      background: #0f131f; border: 1px solid var(--border-glass);
+      border-radius: 24px; width: 100%; max-width: 720px; max-height: 94vh;
+      overflow-y: auto; box-shadow: 0 30px 70px rgba(0,0,0,0.8);
+      animation: modalIn 0.25s ease;
+    }
+    .modal-lg { max-width: 900px; }
+    .modal-xl { max-width: 1200px; }
+    .modal-sm { max-width: 460px; }
+    @keyframes modalIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+    .modal-header {
+      padding: 20px 26px; border-bottom: 1px solid var(--border-glass);
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; background: #0f131f; z-index: 10;
+    }
+    .close-modal {
+      background: rgba(255,255,255,0.08); border: none; color: #fff;
+      width: 36px; height: 36px; border-radius: 50%; font-size: 1.4rem; cursor: pointer;
+    }
+    .modal-body { padding: 26px; }
+
+    .product-gallery-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; margin-top: 18px;
+    }
+    .gallery-sample-card {
+      background: #080b13; border: 1px solid var(--border-glass); border-radius: 16px; overflow: hidden;
+    }
+    .gallery-sample-card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .gallery-sample-info { padding: 12px; font-size: 0.88rem; }
+
+    /* FORMULARIOS */
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.86rem; font-weight: 600; margin-bottom: 7px; color: #cbd5e1; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; background: #07090e; border: 1px solid var(--border-glass);
+      color: #fff; padding: 12px 16px; border-radius: 12px; font-family: inherit; font-size: 0.95rem;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--cyan);
+    }
+
+    .payment-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+    .pay-option input { display: none; }
+    .pay-card {
+      border: 1px solid var(--border-glass); background: #07090e; padding: 14px;
+      border-radius: 14px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.25s;
+    }
+    .pay-option input:checked + .pay-card {
+      border-color: var(--cyan); background: rgba(0, 229, 255, 0.12);
+    }
+    .payment-instructions-box {
+      background: rgba(255, 214, 0, 0.08); border: 1px solid rgba(255, 214, 0, 0.38);
+      padding: 16px; border-radius: 14px; margin-bottom: 16px; font-size: 0.9rem;
+    }
+
+    /* ADMIN TABS */
+    .admin-tabs {
+      display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 26px;
+      background: #0a0e17; border-bottom: 1px solid var(--border-glass);
+    }
+    .admin-tab {
+      background: transparent; border: 1px solid var(--border-glass); color: var(--text-muted);
+      padding: 9px 16px; border-radius: 12px; cursor: pointer; font-weight: 700; font-size: 0.85rem;
+    }
+    .admin-tab.active { background: var(--cyan); color: #000; border-color: var(--cyan); }
+    .admin-tab-content { display: none; }
+    .admin-tab-content.active { display: block; }
+    .admin-split { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+    .admin-form-card, .admin-list-card {
+      background: #0a0e17; border: 1px solid var(--border-glass); padding: 22px; border-radius: 18px;
+    }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 22px; }
+    .kpi-box {
+      background: #121827; border: 1px solid var(--border-glass); padding: 16px; border-radius: 16px; text-align: center;
+    }
+    .kpi-box strong { display: block; font-size: 1.5rem; color: var(--cyan); }
+    .kpi-box span { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* ASISTENTE VIRTUAL 3D CON VOZ & MICRÓFONO */
+    #ai-assistant-widget {
+      position: fixed; bottom: 20px; left: 20px; z-index: 1500;
+      display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+    }
+    #ai-3d-container {
+      width: 155px; height: 185px; border-radius: 24px;
+      background: radial-gradient(circle at center, rgba(0,229,255,0.25), rgba(15,19,31,0.95));
+      border: 2px solid var(--cyan); box-shadow: 0 12px 35px rgba(0,229,255,0.4);
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .ai-badge-live {
+      position: absolute; top: 9px; left: 9px; background: rgba(0,0,0,0.8);
+      color: var(--cyan); font-size: 0.68rem; font-weight: 800; padding: 3px 8px; border-radius: 99px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .ai-pulse-dot { width: 8px; height: 8px; background: #27c93f; border-radius: 50%; animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    #ai-chat-bubble {
+      width: 340px; background: rgba(15, 19, 31, 0.97); backdrop-filter: blur(16px);
+      border: 1px solid var(--magenta); border-radius: 20px; padding: 16px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+    }
+    .ai-chat-header {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid var(--border-glass); padding-bottom: 10px; margin-bottom: 12px;
+    }
+    .ai-messages {
+      max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 9px;
+      font-size: 0.88rem; margin-bottom: 12px;
+    }
+    .msg-ai {
+      background: rgba(0, 229, 255, 0.14); border-left: 3px solid var(--cyan);
+      padding: 9px 12px; border-radius: 10px; color: #fff;
+    }
+    .msg-user {
+      background: rgba(255, 0, 127, 0.18); border-right: 3px solid var(--magenta);
+      padding: 9px 12px; border-radius: 10px; align-self: flex-end; text-align: right;
+    }
+    .ai-input-row { display: flex; gap: 8px; }
+    .ai-input-row input {
+      flex: 1; background: #07090e; border: 1px solid var(--border-glass);
+      color: #fff; padding: 9px 12px; border-radius: 10px; font-size: 0.86rem;
+    }
+    .mic-btn {
+      background: var(--magenta); border: none; color: #fff; width: 38px; height: 38px;
+      border-radius: 10px; cursor: pointer; display: grid; place-items: center; font-size: 1rem; transition: 0.3s;
+    }
+    .mic-btn.listening { background: #27c93f; animation: pulse 0.8s infinite; }
+
+    .whatsapp-float {
+      position: fixed; bottom: 20px; right: 20px; z-index: 1400;
+      background: #25d366; color: #fff; padding: 13px 20px; border-radius: 99px;
+      text-decoration: none; font-weight: 800; display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 10px 28px rgba(37, 211, 102, 0.45);
+    }
+
+    /* FOOTER */
+    .cmyk-animated-footer {
+      background: #040609; border-top: 2px solid transparent;
+      border-image: var(--gradient-cmy) 1; padding: 70px 0 30px; margin-top: 70px;
+    }
+    .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 34px; }
+    .footer-col h4 { color: var(--cyan); margin-bottom: 16px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 10px; }
+    .footer-col a { color: var(--text-muted); text-decoration: none; transition: 0.2s; }
+    .footer-col a:hover { color: var(--yellow); }
+    .footer-socials { display: flex; gap: 12px; margin-top: 16px; }
+    .footer-socials a {
+      width: 42px; height: 42px; border-radius: 14px; background: var(--bg-card);
+      display: grid; place-items: center; color: #fff; font-size: 1.25rem; border: 1px solid var(--border-glass);
+    }
+    .footer-socials a:hover { background: var(--gradient-cmy); color: #000; }
+
+    .toast-container { position: fixed; top: 85px; right: 20px; z-index: 3000; display: flex; flex-direction: column; gap: 10px; }
+    .toast {
+      background: #141b2b; border-left: 4px solid var(--cyan); color: #fff;
+      padding: 14px 20px; border-radius: 12px; box-shadow: 0 12px 30px rgba(0,0,0,0.6); font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid, .admin-split, .form-grid-2, .payment-selector { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
 </head>
 <body>
+  <div class="bg-animated-canvas"></div>
+  <div id="toast-container" class="toast-container"></div>
 
-    <header class="navbar">
-        <div class="container nav-inner">
-            <a href="#inicio" class="brand">Lalo<span class="dot">.</span><span class="c">c</span><span class="m">o</span><span class="y">m</span></a>
-            <nav class="nav-menu">
-                <a href="#inicio" class="nav-link">Inicio</a>
-                <a href="#clientes" class="nav-link">Zona Clientes</a>
-                <a href="#portafolio" class="nav-link">Portafolio</a>
-                <button type="button" id="btnOpenAuthor" class="btn-author">Panel Autor</button>
-            </nav>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <a href="#inicio" class="brand-logo">
+        <span class="logo-3d">
+          <span class="l-white">Lalo</span><span class="l-magenta">.</span><span class="l-cyan">c</span><span class="l-magenta">o</span><span class="l-yellow">m</span>
+        </span>
+        <span class="logo-sub">AGENCIA PUBLICITARIA</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#inicio" class="nav-item">Inicio</a>
+        <a href="#tienda" class="nav-item">Catálogo Extendido</a>
+        <a href="#zona-clientes" class="nav-item highlight-nav"><i class="fa-solid fa-key"></i> Zona Clientes (HD)</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="openCartBtn" title="Carrito de Compras">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="badge" id="cartCount">0</span>
+        </button>
+        <button class="btn-admin-trigger" id="openAdminAuthBtn">
+          <i class="fa-solid fa-sliders"></i> Panel Autor Pro
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="inicio" class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="pill-tag">ESTUDIO VISUAL, PUBLICIDAD TOTAL & CORTES LÁSER</span>
+        <h1>Todo en <span class="text-gradient-cmy">Publicidad, Fotografía, Lápidas y Merchandising</span></h1>
+        <p>
+          Lápidas y osarios en alta durabilidad, cuadros en todos los tamaños (10x15 hasta 100x80), impresión gran formato, banners, logos con luces LED, tazas mágicas, camisas sublimadas y cobertura fotográfica profesional para cualquier evento.
+        </p>
+        <div class="hero-cta">
+          <a href="#tienda" class="btn btn-primary"><i class="fa-solid fa-images"></i> Explorar Galerías de Muestra</a>
+          <a href="#zona-clientes" class="btn btn-outline"><i class="fa-solid fa-cloud-arrow-down"></i> Descargar Archivos HD (Código)</a>
         </div>
-    </header>
-
-    <section id="inicio" class="hero">
-        <div class="container hero-box">
-            <div class="logo-container">
-                <img src="logo.png" alt="Lalo.com Agencia Publicitaria" class="hero-logo" onerror="this.style.display='none'; document.getElementById('textLogo').style.display='block';">
-                <div id="textLogo" class="text-logo" style="display:none;">
-                    <h1>Lalo<span class="m">.</span><span class="c">c</span><span class="m">o</span><span class="y">m</span></h1>
-                    <p>AGENCIA PUBLICITARIA</p>
-                </div>
-            </div>
-            <p class="hero-lead">
-                Fotografía profesional de alta gama. Descarga tus producciones en <strong>resolución nativa y calidad intacta</strong>.
-            </p>
-            <div class="hero-buttons">
-                <a href="#clientes" class="btn btn-dark">Descargar mis Fotos</a>
-                <a href="#portafolio" class="btn btn-light">Ver Trabajos</a>
-            </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <strong>Galerías Ampliadas</strong>
+            <span>Múltiples diseños por producto</span>
+          </div>
+          <div class="stat">
+            <strong>Voz IA Interactiva</strong>
+            <span>Habla con Lalo IA en tiempo real</span>
+          </div>
+          <div class="stat">
+            <strong>Pagos Seguros</strong>
+            <span>PSE, Bancolombia y cualquier banco</span>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <section id="clientes" class="section-clients">
-        <div class="container">
-            <div class="section-title">
-                <span class="pill">ZONA PRIVADA</span>
-                <h2>Descarga tu Sesión</h2>
-                <p>Escribe tu código de acceso único para ver y descargar tus archivos originales.</p>
-            </div>
-            <div class="search-card">
-                <form id="formClientAccess" class="search-form">
-                    <input type="text" id="inputClientCode" placeholder="Ej: LALO-8A2F" required autocomplete="off">
-                    <button type="submit" class="btn btn-dark">Ver Fotos</button>
-                </form>
-                <p id="msgClientError" class="feedback error"></p>
-            </div>
-            <div id="clientResultArea" class="client-result hidden">
-                <div class="result-header">
-                    <div>
-                        <h3 id="lblClientName">Sesión</h3>
-                        <p id="lblClientStats" class="sub-info"></p>
-                    </div>
-                    <button type="button" id="btnCloseClient" class="btn-outline-sm">Cerrar</button>
-                </div>
-                <div id="gridClientPhotos" class="photo-grid"></div>
-            </div>
+      <div class="glass-showcase">
+        <div class="showcase-header">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <small style="color:var(--text-muted)">Lalo.com Studio Pro v5.0</small>
         </div>
-    </section>
-
-    <section id="portafolio" class="section-portfolio">
-        <div class="container">
-            <div class="section-title">
-                <span class="pill">NUESTRO TRABAJO</span>
-                <h2>Portafolio & Referencias</h2>
-                <p>Explora nuestras producciones recientes.</p>
-            </div>
-            <div id="gridPortfolio" class="portfolio-grid"></div>
+        <div class="showcase-logo-box">
+          <div class="floating-brand">
+            <span class="l-white">Lalo</span><span class="l-magenta">.</span><span class="l-cyan">c</span><span class="l-magenta">o</span><span class="l-yellow">m</span>
+          </div>
+          <p style="font-size:0.82rem; letter-spacing:2px; color:#cbd5e1;">IMPACTO VISUAL MÁGICO Y MODERNO</p>
         </div>
-    </section>
-
-    <!-- Modal Autor -->
-    <div id="modalAuthor" class="modal-backdrop hidden">
-        <div class="modal-box">
-            <div class="modal-top">
-                <h3>Panel de Control — Autor</h3>
-                <button type="button" id="btnCloseModal" class="btn-close">&times;</button>
-            </div>
-
-            <!-- Pantalla Configurar / Cambiar Contraseña Directa -->
-            <div id="viewPasswordSetup" class="hidden">
-                <p class="modal-text" id="pwdSetupTitle">Configura tu contraseña maestra por primera vez:</p>
-                <form id="formSetPassword" class="form-vertical">
-                    <div id="currentPassGroup" class="hidden">
-                        <label>Contraseña actual</label>
-                        <input type="password" id="inputOldPass" placeholder="Contraseña actual">
-                    </div>
-                    <label>Nueva contraseña</label>
-                    <input type="password" id="inputNewPassMaster" placeholder="Escribe tu nueva contraseña" required>
-                    <button type="submit" class="btn btn-dark full">Guardar Contraseña</button>
-                    <p id="msgSetPassFeedback" class="feedback"></p>
-                </form>
-            </div>
-
-            <!-- Pantalla Login -->
-            <div id="viewAuthorLogin" class="hidden">
-                <p class="modal-text">Ingresa tu contraseña para administrar:</p>
-                <form id="formAuthorLogin" class="form-vertical">
-                    <input type="password" id="inputAuthorPass" placeholder="Tu contraseña" required>
-                    <button type="submit" class="btn btn-dark full">Entrar</button>
-                    <p id="msgLoginError" class="feedback error"></p>
-                </form>
-            </div>
-
-            <!-- Panel de Autor Principal -->
-            <div id="viewAuthorPanel" class="hidden">
-                <div class="panel-tabs">
-                    <button type="button" class="tab-item active" data-target="paneUploadClient">Subir Cliente</button>
-                    <button type="button" class="tab-item" data-target="paneUploadPortfolio">Portafolio</button>
-                    <button type="button" class="tab-item" data-target="paneManage">Gestionar</button>
-                    <button type="button" class="tab-item" data-target="paneSecurity">Contraseña</button>
-                </div>
-
-                <div id="paneUploadClient" class="tab-pane">
-                    <form id="formUploadClient" class="form-vertical">
-                        <label>Nombre del cliente</label>
-                        <input type="text" id="inputNewClientName" placeholder="Ej: Boda Juan & Maria" required>
-                        <label>Fotos originales (Sin comprimir)</label>
-                        <input type="file" id="inputNewClientFiles" accept="image/*" multiple required class="input-file">
-                        <button type="submit" id="btnSubmitClient" class="btn btn-dark full">Subir y Generar Código</button>
-                    </form>
-                    <div id="boxGeneratedCode" class="code-success hidden">
-                        <p>¡Fotos subidas con éxito! Comparte este código con tu cliente:</p>
-                        <div class="code-row">
-                            <strong id="txtGeneratedCode">LALO-0000</strong>
-                            <button type="button" id="btnCopyCode" class="btn-sm">Copiar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="paneUploadPortfolio" class="tab-pane hidden">
-                    <form id="formUploadPortfolio" class="form-vertical">
-                        <label>Título del trabajo de referencia</label>
-                        <input type="text" id="inputPortfolioTitle" placeholder="Ej: Fotografía Comercial" required>
-                        <label>Seleccionar fotos de muestra</label>
-                        <input type="file" id="inputPortfolioFiles" accept="image/*" multiple required class="input-file">
-                        <button type="submit" id="btnSubmitPortfolio" class="btn btn-dark full">Publicar</button>
-                        <p id="msgPortfolioSuccess" class="feedback success"></p>
-                    </form>
-                </div>
-
-                <div id="paneManage" class="tab-pane hidden">
-                    <h4 class="manage-subtitle">Sesiones de Clientes Activos</h4>
-                    <div id="listAdminClients" class="manage-list"></div>
-                    <h4 class="manage-subtitle" style="margin-top:16px;">Portafolio Actual</h4>
-                    <div id="listAdminPortfolio" class="manage-list"></div>
-                </div>
-
-                <div id="paneSecurity" class="tab-pane hidden">
-                    <form id="formChangePassInside" class="form-vertical">
-                        <label>Contraseña actual</label>
-                        <input type="password" id="inputInsideOld" placeholder="Contraseña actual" required>
-                        <label>Nueva contraseña</label>
-                        <input type="password" id="inputInsideNew" placeholder="Nueva contraseña" required>
-                        <button type="submit" class="btn btn-dark full">Actualizar Contraseña</button>
-                        <p id="msgInsidePassFeedback" class="feedback"></p>
-                    </form>
-                </div>
-            </div>
+        <div class="mini-card">
+          <i class="fa-solid fa-microphone-lines c-cyan"></i>
+          <div>
+            <h4>Asistente con Voz Activa</h4>
+            <p style="font-size:0.82rem; color:var(--text-muted);">Habla y el sistema te responde al instante</p>
+          </div>
         </div>
+        <div class="mini-card">
+          <i class="fa-solid fa-shield-halved c-magenta"></i>
+          <div>
+            <h4>Bóveda Privada HD Original</h4>
+            <p style="font-size:0.82rem; color:var(--text-muted);">Entrega segura sin pérdida de calidad</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATÁLOGO EXTENDIDO CON GALERÍAS MÚLTIPLES -->
+  <section id="tienda" class="section">
+    <div class="container">
+      <div class="section-head center">
+        <span class="section-tag">CATÁLOGO COMPLETO Y GALERÍAS</span>
+        <h2>Nuestros Productos y Servicios Publicitarios</h2>
+        <p>Haz clic en <strong>"Ver Galería y Diseños"</strong> en cualquier producto para desplegar la galería masiva de muestras y precios específicos.</p>
+      </div>
+
+      <div class="store-filter-bar" id="storeFilterBar">
+        <button class="store-filter-btn active" data-filter="all">Todos los Productos</button>
+        <button class="store-filter-btn" data-filter="conmemorativo">Lápidas & Osarios</button>
+        <button class="store-filter-btn" data-filter="publicidad">Logos LED, Banners & Gran Formato</button>
+        <button class="store-filter-btn" data-filter="cuadros">Cuadros & Fotografía</button>
+        <button class="store-filter-btn" data-filter="personalizados">Tazas, Camisas & Acrílicos</button>
+      </div>
+
+      <div id="productsGrid" class="products-grid"></div>
+    </div>
+  </section>
+
+  <!-- ZONA PRIVADA DE CLIENTES (CALIDAD ORIGINAL) -->
+  <section id="zona-clientes" class="section">
+    <div class="container">
+      <div class="section-head center">
+        <span class="section-tag">BÓVEDA DIGITAL PROFESIONAL</span>
+        <h2>Portal de Descarga para Clientes (Calidad Exacta Original)</h2>
+        <p>Ingresa el código único entregado por Lalo.com al finalizar tu sesión fotográfica o evento para acceder a tus archivos en máxima resolución[cite: 1].</p>
+      </div>
+      <div class="vault-access-box">
+        <form id="clientAccessForm" class="code-form">
+          <div class="input-icon-wrap">
+            <i class="fa-solid fa-lock" style="color:var(--cyan)"></i>
+            <input type="text" id="clientCodeInput" placeholder="Ej: LALO-7492" required />
+          </div>
+          <button type="submit" class="btn btn-primary"><i class="fa-solid fa-unlock-keyhole"></i> Desbloquear Archivos HD</button>
+        </form>
+        <div class="vault-security-note">
+          <i class="fa-solid fa-shield-check"></i> Cifrado seguro • Descarga de material original sin compresión
+        </div>
+      </div>
+      <div id="clientGalleryResult" class="hidden" style="margin-top:35px;"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER CON REDES SOCIALES OFICIALES -->
+  <footer class="cmyk-animated-footer">
+    <div class="container footer-content">
+      <div class="footer-col">
+        <div class="logo-3d" style="margin-bottom:10px;">
+          <span class="l-white">Lalo</span><span class="l-magenta">.</span><span class="l-cyan">c</span><span class="l-magenta">o</span><span class="l-yellow">m</span>
+        </div>
+        <p style="color:var(--text-muted); font-size:0.9rem;">
+          Agencia Publicitaria, Estudio Fotográfico, Corte Láser, Sublimación y Arte Conmemorativo en Colombia.
+        </p>
+        <div class="footer-socials">
+          <a href="https://www.tiktok.com/@lalo_agencia_publicit" target="_blank" rel="noopener" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          <a href="https://www.facebook.com/search/top?q=Lalo%20Publicidad" target="_blank" rel="noopener" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/agencia_publicitaria_lalo.co?psln=Ymk0ZnhmYmd1enB0" target="_blank" rel="noopener" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://wa.me/573117053670" target="_blank" rel="noopener" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Redes Oficiales</h4>
+        <ul>
+          <li><a href="https://www.tiktok.com/@lalo_agencia_publicit" target="_blank"><i class="fa-brands fa-tiktok"></i> TikTok: lalo_agencia_publicit</a></li>
+          <li><a href="https://www.facebook.com/search/top?q=Lalo%20Publicidad" target="_blank"><i class="fa-brands fa-facebook"></i> Facebook: Lalo Publicidad</a></li>
+          <li><a href="https://www.instagram.com/agencia_publicitaria_lalo.co?psln=Ymk0ZnhmYmd1enB0" target="_blank"><i class="fa-brands fa-instagram"></i> Instagram: agencia_publicitaria_lalo.co</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Pagos Seguros y Cuentas</h4>
+        <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:8px;">
+          <i class="fa-solid fa-building-columns c-cyan"></i> <strong>Cuenta de Ahorros Bancolombia:</strong> <span id="footerBankAcc">70528068853</span>
+        </p>
+        <p style="color:var(--text-muted); font-size:0.84rem;">
+          Aceptamos pagos desde <strong>cualquier banco vía PSE, Bancolombia, Daviplata, o transferencias desde Nequi a nuestra cuenta de ahorros</strong>.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ASISTENTE VIRTUAL 3D CON VOZ E INTERACCIÓN HABLADA -->
+  <div id="ai-assistant-widget">
+    <div id="ai-chat-bubble">
+      <div class="ai-chat-header">
+        <strong style="font-size:0.88rem; color:var(--cyan);"><i class="fa-solid fa-robot"></i> Lalo IA — Asesor de Voz</strong>
+        <div>
+          <button id="toggleVoiceBtn" class="btn-sm btn-ghost" title="Silenciar Voz"><i class="fa-solid fa-volume-high"></i></button>
+          <button id="minimizeAiBtn" class="btn-sm btn-ghost" title="Minimizar">_</button>
+        </div>
+      </div>
+      <div id="aiMessages" class="ai-messages"></div>
+      <form id="aiChatForm" class="ai-input-row">
+        <input type="text" id="aiUserInput" placeholder="Escribe o haz clic en el micrófono..." autocomplete="off" />
+        <button type="button" id="aiMicBtn" class="mic-btn" title="Hablar por voz con la IA"><i class="fa-solid fa-microphone"></i></button>
+        <button type="submit" class="btn btn-cyan btn-sm"><i class="fa-solid fa-paper-plane"></i></button>
+      </form>
     </div>
 
-    <!-- Lightbox -->
-    <div id="lightboxModal" class="modal-backdrop hidden">
-        <div class="lightbox-content">
-            <button type="button" id="btnCloseLightbox" class="lightbox-close">&times;</button>
-            <img id="lightboxImg" src="" alt="Zoom">
-            <p id="lightboxCaption"></p>
-        </div>
+    <div id="ai-3d-container" title="Haz clic para que Lalo IA te salude con voz">
+      <span class="ai-badge-live"><span class="ai-pulse-dot"></span> LALO 3D VOZ</span>
     </div>
+  </div>
 
-    <!-- Botón WhatsApp -->
-    <a href="https://wa.me/573117053670?text=Hola%20LALO.COM,%20me%20interesan%20sus%20servicios%20fotográficos." class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 32 32" width="26" height="26" fill="currentColor"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.958A15.905 15.905 0 0016.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.31 22.606c-.39 1.1-1.932 2.014-3.166 2.28-.846.18-1.95.324-5.67-1.218-4.762-1.972-7.826-6.81-8.064-7.126-.23-.316-1.924-2.56-1.924-4.884 0-2.324 1.216-3.466 1.648-3.938.432-.472.944-.59 1.258-.59.314 0 .628.002.904.016.29.014.678-.11 1.06.808.39.944 1.33 3.246 1.448 3.482.118.236.196.512.04.826-.158.316-.236.512-.472.788-.236.276-.496.616-.708.826-.236.236-.482.492-.206.964.276.472 1.226 2.022 2.632 3.274 1.808 1.61 3.332 2.11 3.804 2.346.472.236.748.196 1.024-.118.276-.316 1.18-1.378 1.494-1.85.314-.472.628-.394 1.06-.236.432.158 2.752 1.298 3.224 1.534.472.236.786.354.904.55.118.198.118 1.142-.272 2.242z"/></svg>
-        <span>WhatsApp</span>
-    </a>
+  <!-- BOTÓN FLOTANTE WHATSAPP -->
+  <a href="https://wa.me/573117053670?text=Hola%20Lalo.com,%20necesito%20asesoría" class="whatsapp-float" target="_blank" rel="noopener">
+    <i class="fa-brands fa-whatsapp" style="font-size:1.4rem;"></i>
+    <span>WhatsApp Directo</span>
+  </a>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="cmyk-line">
-                <span class="bg-c"></span><span class="bg-m"></span><span class="bg-y"></span><span class="bg-w"></span>
-            </div>
-            <p class="quote">"Cada instante merece ser eterno; la verdadera fotografía captura el alma intacta de cada historia."</p>
-            <p class="copy">&copy; 2026 <strong>LALO.COM</strong> — Agencia Publicitaria. Todos los derechos reservados.</p>
+  <!-- MODAL 1: GALERÍA DE MUESTRA POR PRODUCTO -->
+  <div id="productGalleryModal" class="modal-backdrop hidden">
+    <div class="modal-panel modal-lg">
+      <div class="modal-header">
+        <div>
+          <span class="section-tag" style="margin:0;">GALERÍA MASIVA DE DISEÑOS</span>
+          <h3 id="galModalTitle">Producto</h3>
         </div>
-    </footer>
+        <button class="close-modal" data-close="productGalleryModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p id="galModalDesc" style="color:var(--text-muted); margin-bottom:14px;"></p>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; background:#07090e; padding:16px; border-radius:16px; border:1px solid var(--border-glass);">
+          <div>
+            <small style="color:var(--text-muted);">Precio Base Referencial:</small>
+            <div id="galModalPrice" style="font-size:1.35rem; font-weight:900; color:var(--yellow);">$0 COP</div>
+          </div>
+          <button id="galModalOrderBtn" class="btn btn-primary">
+            <i class="fa-solid fa-cart-plus"></i> Personalizar y Pedir Este Producto
+          </button>
+        </div>
 
-    <script>
-        let globalPassword = '';
+        <h4 style="margin-top:24px; color:var(--cyan);"><i class="fa-solid fa-images"></i> Diseños y Muestras Reales Disponibles:</h4>
+        <div id="galModalImagesGrid" class="product-gallery-grid"></div>
+      </div>
+    </div>
+  </div>
 
-        async function fetchPortfolio() {
-            const grid = document.getElementById('gridPortfolio');
-            try {
-                const res = await fetch('/api/portfolio');
-                const data = await res.json();
-                if (!data.portfolio || data.portfolio.length === 0) {
-                    grid.innerHTML = '<p class="empty-note">Aún no hay trabajos en el portafolio.</p>';
-                    return;
-                }
-                grid.innerHTML = data.portfolio.map(item => `
-                    <div class="portfolio-item" onclick="openLightbox('${item.url}', '${item.title.replace(/'/g, "\\'")}')">
-                        <img src="${item.url}" alt="${item.title}" loading="lazy">
-                        <div class="portfolio-caption"><span>${item.title}</span></div>
-                    </div>
-                `).join('');
-            } catch (e) {
-                grid.innerHTML = '<p class="empty-note">Inicia el servidor Node.js para ver las fotos.</p>';
-            }
-        }
+  <!-- MODAL 2: CARRITO Y CHECKOUT CON ESPECIFICACIONES COMPLETAS -->
+  <div id="cartModal" class="modal-backdrop hidden">
+    <div class="modal-panel modal-lg">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-cart-shopping"></i> Tu Pedido y Especificaciones en Lalo.com</h3>
+        <button class="close-modal" data-close="cartModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="cartItemsContainer"></div>
+        <div style="display:flex; justify-content:space-between; padding:16px; background:#07090e; border-radius:14px; margin:16px 0; font-size:1.2rem;">
+          <span>Total Estimado:</span>
+          <strong id="cartTotalAmount" style="color:var(--yellow);">$0 COP</strong>
+        </div>
 
-        // Consultar cliente
-        document.getElementById('formClientAccess').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const code = document.getElementById('inputClientCode').value.trim();
-            const errEl = document.getElementById('msgClientError');
-            const resultArea = document.getElementById('clientResultArea');
-            const grid = document.getElementById('gridClientPhotos');
-            errEl.textContent = '';
+        <form id="checkoutForm">
+          <h4 style="color:var(--cyan); margin-bottom:14px;"><i class="fa-solid fa-user-shield"></i> 1. Datos Completos del Cliente (Para Atención y Entrega)</h4>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Nombre Completo o Empresa *</label>
+              <input type="text" id="ordName" required placeholder="Ej: Marcela Gómez" />
+            </div>
+            <div class="form-group">
+              <label>Cédula o NIT *</label>
+              <input type="text" id="ordDocId" required placeholder="Ej: 1.023.456.789" />
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Teléfono / WhatsApp *</label>
+              <input type="tel" id="ordPhone" required placeholder="Ej: 311 705 3670" />
+            </div>
+            <div class="form-group">
+              <label>Correo Electrónico *</label>
+              <input type="email" id="ordEmail" required placeholder="cliente@correo.com" />
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Ciudad / Municipio y Departamento *</label>
+              <input type="text" id="ordCity" required placeholder="Ej: Medellín, Antioquia" />
+            </div>
+            <div class="form-group">
+              <label>Dirección Exacta de Envío *</label>
+              <input type="text" id="ordAddress" required placeholder="Calle, Carrera, Barrio, Referencia" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Fecha Límite en que Requieres el Pedido *</label>
+            <input type="date" id="ordDeliveryDate" required />
+          </div>
 
-            try {
-                const res = await fetch(`/api/client/${encodeURIComponent(code)}`);
-                const result = await res.json();
-                if (!result.success) {
-                    errEl.textContent = result.message;
-                    resultArea.classList.add('hidden');
-                    return;
-                }
-                document.getElementById('lblClientName').textContent = `Sesión: ${result.data.clientName}`;
-                document.getElementById('lblClientStats').textContent = `${result.data.photos.length} fotos originales • ${result.data.createdAt}`;
-                grid.innerHTML = result.data.photos.map(photo => `
-                    <div class="photo-card">
-                        <div class="photo-thumb" onclick="openLightbox('${photo.url}', '${photo.originalName.replace(/'/g, "\\'")}')">
-                            <img src="${photo.url}" alt="${photo.originalName}" loading="lazy">
-                        </div>
-                        <div class="photo-meta">
-                            <strong title="${photo.originalName}">${photo.originalName}</strong>
-                            <span>${photo.size} • Original</span>
-                            <a href="/api/download/${photo.filename}?name=${encodeURIComponent(photo.originalName)}" class="btn-download">Descargar Original</a>
-                        </div>
-                    </div>
-                `).join('');
-                resultArea.classList.remove('hidden');
-            } catch (err) {
-                errEl.textContent = 'Error de conexión con el servidor.';
-            }
-        });
+          <h4 style="color:var(--magenta); margin:18px 0 12px;"><i class="fa-solid fa-sliders"></i> 2. Especificaciones Detalladas según Producto</h4>
+          <div id="dynamicSpecsContainer"></div>
+          <div class="form-group">
+            <label>Notas Adicionales (Medidas exactas en cm, dedicatoria para lápida, colores, textos, etc.) *</label>
+            <textarea id="ordSpecsNotes" rows="3" required placeholder="Describe todos los detalles que deseas..."></textarea>
+          </div>
 
-        document.getElementById('btnCloseClient').addEventListener('click', () => {
-            document.getElementById('clientResultArea').classList.add('hidden');
-            document.getElementById('inputClientCode').value = '';
-        });
+          <h4 style="color:var(--yellow); margin:18px 0 12px;"><i class="fa-solid fa-building-columns"></i> 3. Método de Pago (Cuenta de Ahorros Bancolombia / PSE)</h4>
+          <div class="payment-selector">
+            <label class="pay-option">
+              <input type="radio" name="payMethod" value="PSE (Cualquier Banco)" checked />
+              <div class="pay-card">
+                <i class="fa-solid fa-building-columns c-cyan"></i>
+                <div><strong>PSE / En Línea</strong><br><small>Débito seguro</small></div>
+              </div>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="payMethod" value="Bancolombia Ahorros" />
+              <div class="pay-card">
+                <i class="fa-solid fa-credit-card c-yellow"></i>
+                <div><strong>Bancolombia Ahorros</strong><br><small>70528068853</small></div>
+              </div>
+            </label>
+            <label class="pay-option">
+              <input type="radio" name="payMethod" value="Nequi / Daviplata a Bancolombia" />
+              <div class="pay-card">
+                <i class="fa-solid fa-mobile-screen c-magenta"></i>
+                <div><strong>Nequi / Daviplata</strong><br><small>Hacia cuenta Bancolombia</small></div>
+              </div>
+            </label>
+          </div>
 
-        // Lightbox
-        function openLightbox(url, caption) {
-            document.getElementById('lightboxImg').src = url;
-            document.getElementById('lightboxCaption').textContent = caption;
-            document.getElementById('lightboxModal').classList.remove('hidden');
-        }
-        document.getElementById('btnCloseLightbox').addEventListener('click', () => document.getElementById('lightboxModal').classList.add('hidden'));
+          <div class="payment-instructions-box">
+            <strong>Instrucciones:</strong> Realiza tu pago a nuestra <strong>Cuenta de Ahorros Bancolombia N° <span id="checkoutBankNumber">70528068853</span></strong> o mediante PSE.
+            <div class="form-group" style="margin-top:10px; margin-bottom:0;">
+              <label>Número de Comprobante / Referencia de Pago *</label>
+              <input type="text" id="ordPayRef" required placeholder="Ej: PSE-99281 o N° de transferencia" />
+            </div>
+          </div>
 
-        // Control Modal Autor y Contraseña dinámica
-        const modalAuthor = document.getElementById('modalAuthor');
-        document.getElementById('btnOpenAuthor').addEventListener('click', async () => {
-            modalAuthor.classList.remove('hidden');
-            const res = await fetch('/api/check-password-status');
-            const data = await res.json();
+          <button type="submit" class="btn btn-primary btn-block">
+            <i class="fa-solid fa-circle-check"></i> Confirmar Pedido y Registrar al Instante
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-            document.getElementById('viewPasswordSetup').classList.add('hidden');
-            document.getElementById('viewAuthorLogin').classList.add('hidden');
-            document.getElementById('viewAuthorPanel').classList.add('hidden');
+  <!-- MODAL 3: LOGIN DE AUTOR -->
+  <div id="adminAuthModal" class="modal-backdrop hidden">
+    <div class="modal-panel modal-sm">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-lock"></i> Acceso de Autor</h3>
+        <button class="close-modal" data-close="adminAuthModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="adminLoginForm">
+          <div class="form-group">
+            <label>Contraseña Maestra</label>
+            <input type="password" id="adminPassInput" required placeholder="••••••••" />
+          </div>
+          <small style="color:var(--text-muted);">Clave por defecto: <code>lalo2026</code></small>
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:16px;">Entrar al Panel Pro</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-            if (!data.hasPassword) {
-                document.getElementById('pwdSetupTitle').textContent = 'Crea tu contraseña maestra por primera vez:';
-                document.getElementById('currentPassGroup').classList.add('hidden');
-                document.getElementById('viewPasswordSetup').classList.remove('hidden');
-            } else {
-                document.getElementById('viewAuthorLogin').classList.remove('hidden');
-            }
-        });
+  <!-- MODAL 4: PANEL DE CONTROL PRO Y AJUSTES -->
+  <div id="adminDashboardModal" class="modal-backdrop hidden">
+    <div class="modal-panel modal-xl">
+      <div class="modal-header">
+        <div>
+          <h3><i class="fa-solid fa-sliders"></i> Panel de Control Pro, Galerías Masivas & Contabilidad IA</h3>
+          <small style="color:var(--text-muted);">Administra catálogos, sube múltiples fotos de muestra, gestiona códigos de clientes y contabilidad</small>
+        </div>
+        <button class="close-modal" data-close="adminDashboardModal">&times;</button>
+      </div>
 
-        document.getElementById('btnCloseModal').addEventListener('click', () => modalAuthor.classList.add('hidden'));
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="tab-galleries"><i class="fa-solid fa-images"></i> Subir Fotos a Galerías</button>
+        <button class="admin-tab" data-tab="tab-catalog"><i class="fa-solid fa-tags"></i> Gestionar Productos</button>
+        <button class="admin-tab" data-tab="tab-ai-accounting"><i class="fa-solid fa-chart-line"></i> Contabilidad & Visitas IA</button>
+        <button class="admin-tab" data-tab="tab-vault"><i class="fa-solid fa-camera"></i> Bóveda Clientes (HD)</button>
+        <button class="admin-tab" data-tab="tab-orders"><i class="fa-solid fa-receipt"></i> Pedidos Recibidos</button>
+        <button class="admin-tab" data-tab="tab-settings"><i class="fa-solid fa-gear"></i> Ajustes Generales</button>
+      </div>
 
-        // Guardar/Crear Contraseña
-        document.getElementById('formSetPassword').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const newPassword = document.getElementById('inputNewPassMaster').value;
-            const currentPassword = document.getElementById('inputOldPass').value || '';
-            const fb = document.getElementById('msgSetPassFeedback');
-
-            const res = await fetch('/api/set-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ currentPassword, newPassword })
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                fb.className = 'feedback success';
-                fb.textContent = data.message;
-                setTimeout(() => {
-                    document.getElementById('viewPasswordSetup').classList.add('hidden');
-                    document.getElementById('viewAuthorLogin').classList.remove('hidden');
-                    fb.textContent = '';
-                    e.target.reset();
-                }, 1200);
-            } else {
-                fb.className = 'feedback error';
-                fb.textContent = data.message;
-            }
-        });
-
-        // Login Autor
-        document.getElementById('formAuthorLogin').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const pass = document.getElementById('inputAuthorPass').value;
-            const errEl = document.getElementById('msgLoginError');
-            const res = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: pass })
-            });
-            const data = await res.json();
-            if (data.success) {
-                globalPassword = pass;
-                document.getElementById('viewAuthorLogin').classList.add('hidden');
-                document.getElementById('viewAuthorPanel').classList.remove('hidden');
-                errEl.textContent = '';
-            } else {
-                errEl.textContent = data.message;
-            }
-        });
-
-        // Pestañas Panel
-        document.querySelectorAll('.tab-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('hidden'));
-                btn.classList.add('active');
-                document.getElementById(btn.dataset.target).classList.remove('hidden');
-                if (btn.dataset.target === 'paneManage') loadAdminLists();
-            });
-        });
-
-        // Subir Cliente
-        document.getElementById('formUploadClient').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmitClient');
-            const name = document.getElementById('inputNewClientName').value;
-            const files = document.getElementById('inputNewClientFiles').files;
-            const fd = new FormData();
-            fd.append('password', globalPassword);
-            fd.append('clientName', name);
-            for (let f of files) fd.append('photos', f);
-
-            btn.textContent = 'Subiendo archivos originales...';
-            btn.disabled = true;
-            const res = await fetch('/api/upload-client', { method: 'POST', body: fd });
-            const data = await res.json();
-            btn.textContent = 'Subir y Generar Código';
-            btn.disabled = false;
-
-            if (data.success) {
-                document.getElementById('txtGeneratedCode').textContent = data.code;
-                document.getElementById('boxGeneratedCode').classList.remove('hidden');
-                e.target.reset();
-            }
-        });
-
-        document.getElementById('btnCopyCode').addEventListener('click', () => {
-            navigator.clipboard.writeText(document.getElementById('txtGeneratedCode').textContent);
-            const b = document.getElementById('btnCopyCode');
-            b.textContent = '¡Copiado!';
-            setTimeout(() => b.textContent = 'Copiar', 2000);
-        });
-
-        // Subir Portafolio
-        document.getElementById('formUploadPortfolio').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmitPortfolio');
-            const title = document.getElementById('inputPortfolioTitle').value;
-            const files = document.getElementById('inputPortfolioFiles').files;
-            const msg = document.getElementById('msgPortfolioSuccess');
-            const fd = new FormData();
-            fd.append('password', globalPassword);
-            fd.append('title', title);
-            for (let f of files) fd.append('photos', f);
-
-            btn.textContent = 'Publicando...';
-            btn.disabled = true;
-            const res = await fetch('/api/upload-portfolio', { method: 'POST', body: fd });
-            const data = await res.json();
-            btn.textContent = 'Publicar';
-            btn.disabled = false;
-
-            if (data.success) {
-                msg.textContent = '¡Publicado con éxito!';
-                e.target.reset();
-                fetchPortfolio();
-            }
-        });
-
-        // Gestionar Listas
-        async function loadAdminLists() {
-            const cList = document.getElementById('listAdminClients');
-            const pList = document.getElementById('listAdminPortfolio');
-            const resC = await fetch('/api/admin/clients', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: globalPassword })
-            });
-            const dataC = await resC.json();
-            cList.innerHTML = dataC.clients.length ? dataC.clients.map(c => `
-                <div class="manage-row">
-                    <span><strong>${c.code}</strong> — ${c.clientName} (${c.photos.length} fotos)</span>
-                    <button type="button" class="btn-del" onclick="deleteClient('${c.code}')">Eliminar</button>
+      <div class="modal-body">
+        <!-- TAB 1: SUBIR FOTOS A GALERÍAS -->
+        <div id="tab-galleries" class="admin-tab-content active">
+          <div class="admin-split">
+            <div class="admin-form-card">
+              <h4><i class="fa-solid fa-cloud-arrow-up"></i> Subir Imágenes Masivas de Muestra a Catálogos</h4>
+              <p style="font-size:0.86rem; color:var(--text-muted); margin-bottom:14px;">Elige el producto y sube múltiples fotos reales de tus trabajos para que los clientes las exploren.</p>
+              <form id="uploadGallerySampleForm">
+                <div class="form-group">
+                  <label>Seleccionar Producto / Catálogo *</label>
+                  <select id="galleryTargetProduct" required></select>
                 </div>
-            `).join('') : '<p class="empty-sm">No hay sesiones activas.</p>';
-
-            const resP = await fetch('/api/portfolio');
-            const dataP = await resP.json();
-            pList.innerHTML = dataP.portfolio.length ? dataP.portfolio.map(p => `
-                <div class="manage-row">
-                    <span>${p.title}</span>
-                    <button type="button" class="btn-del" onclick="deletePortfolio('${p.id}')">Eliminar</button>
+                <div class="form-group">
+                  <label>Título o Descripción del Diseño *</label>
+                  <input type="text" id="sampleCaption" required placeholder="Ej: Lápida 50x50 Porcelanato Oro con Fotografía HD" />
                 </div>
-            `).join('') : '<p class="empty-sm">No hay fotos en portafolio.</p>';
+                <div class="form-group">
+                  <label>Precio Específico de este Diseño (COP)</label>
+                  <input type="number" id="samplePrice" placeholder="Ej: 190000" />
+                </div>
+                <div class="form-group">
+                  <label>Seleccionar Archivos de Imagen *</label>
+                  <input type="file" id="sampleImageFiles" accept="image/*" multiple required />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                  <i class="fa-solid fa-plus"></i> Subir a la Galería del Producto
+                </button>
+              </form>
+            </div>
+            <div class="admin-list-card">
+              <h4>Galerías Actuales por Producto</h4>
+              <div id="adminGalleryPreviewList" style="max-height:400px; overflow-y:auto;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: GESTIONAR PRODUCTOS -->
+        <div id="tab-catalog" class="admin-tab-content">
+          <div class="admin-split">
+            <div class="admin-form-card">
+              <h4>Crear Nuevo Producto o Servicio</h4>
+              <form id="newProductForm">
+                <div class="form-group">
+                  <label>Nombre del Producto *</label>
+                  <input type="text" id="newProdTitle" required placeholder="Ej: Reconocimiento en Acrílico con Luz" />
+                </div>
+                <div class="form-group">
+                  <label>Categoría *</label>
+                  <select id="newProdCat">
+                    <option value="conmemorativo">Lápidas & Osarios</option>
+                    <option value="publicidad">Logos LED, Banners & Gran Formato</option>
+                    <option value="cuadros">Cuadros & Fotografía</option>
+                    <option value="personalizados">Tazas, Camisas & Acrílicos</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Precio Base (COP) *</label>
+                  <input type="number" id="newProdPrice" required placeholder="Ej: 90000" />
+                </div>
+                <div class="form-group">
+                  <label>Descripción *</label>
+                  <textarea id="newProdDesc" rows="2" required></textarea>
+                </div>
+                <div class="form-group">
+                  <label>Foto de Portada</label>
+                  <input type="file" id="newProdCover" accept="image/*" />
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Guardar Producto</button>
+              </form>
+            </div>
+            <div class="admin-list-card">
+              <h4>Modificar Precios al Instante</h4>
+              <div id="adminProductsManageList" style="max-height:420px; overflow-y:auto;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: CONTABILIDAD IA -->
+        <div id="tab-ai-accounting" class="admin-tab-content">
+          <div class="kpi-grid" id="aiKpiGrid"></div>
+          <div class="admin-form-card">
+            <h4><i class="fa-solid fa-clock-rotate-left"></i> Registro de Auditoría y Actividad en Vivo</h4>
+            <div id="auditLogContainer" style="max-height:320px; overflow-y:auto; margin-top:14px; font-size:0.86rem;"></div>
+          </div>
+        </div>
+
+        <!-- TAB 4: BÓVEDA CLIENTES -->
+        <div id="tab-vault" class="admin-tab-content">
+          <div class="admin-form-card">
+            <h4>Subir Archivos HD de Sesión para Cliente (Genera Código Único)</h4>
+            <form id="createVaultForm" class="form-grid-2">
+              <div class="form-group">
+                <label>Nombre del Cliente / Evento *</label>
+                <input type="text" id="vaultClientName" required placeholder="Ej: Bodas 2026 - Familia Restrepo" />
+              </div>
+              <div class="form-group">
+                <label>Archivos HD Originales *</label>
+                <input type="file" id="vaultFiles" multiple accept="image/*,video/*" required />
+              </div>
+              <button type="submit" class="btn btn-primary">Generar Código Único</button>
+            </form>
+            <div id="vaultSessionsAdminList" style="margin-top:18px;"></div>
+          </div>
+        </div>
+
+        <!-- TAB 5: PEDIDOS -->
+        <div id="tab-orders" class="admin-tab-content">
+          <div id="adminOrdersList"></div>
+        </div>
+
+        <!-- TAB 6: AJUSTES -->
+        <div id="tab-settings" class="admin-tab-content">
+          <form id="globalSettingsForm" class="admin-form-card">
+            <h4>Configuración General de Lalo.com</h4>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label>Cuenta de Ahorros Bancolombia</label>
+                <input type="text" id="setBankAcc" />
+              </div>
+              <div class="form-group">
+                <label>WhatsApp Oficial</label>
+                <input type="text" id="setWhatsapp" />
+              </div>
+              <div class="form-group">
+                <label>Nombre del Asistente IA</label>
+                <input type="text" id="setAiName" />
+              </div>
+              <div class="form-group">
+                <label>Saludo de Bienvenida de la IA</label>
+                <input type="text" id="setAiGreeting" />
+              </div>
+              <div class="form-group">
+                <label>Nueva Contraseña de Autor</label>
+                <input type="text" id="setAdminPass" placeholder="Dejar en blanco si no se cambia" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Guardar Ajustes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       1. BASE DE DATOS Y CATÁLOGO EXTENDIDO
+       ========================================================================== */
+    const DEFAULT_PRODUCTS = [
+      {
+        id: 'prod-lapidas',
+        title: 'Lápidas Conmemorativas 50x50 cm',
+        category: 'conmemorativo',
+        price: 180000,
+        desc: 'Fabricadas en porcelanato de alta resistencia, acrílico, baldosa o vidrio templado. Resistentes a rayos UV e intemperie.',
+        cover: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80',
+        specsType: 'lapida',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80', caption: 'Lápida 50x50 en Porcelanato Brillante Dorado', price: 180000 },
+          { img: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80', caption: 'Lápida 50x50 en Vidrio Templado HD', price: 210000 },
+          { img: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=800&q=80', caption: 'Lápida 50x50 en Baldosa Cerámica Conmemorativa', price: 160000 }
+        ]
+      },
+      {
+        id: 'prod-osarios',
+        title: 'Osarios Conmemorativos 30x30 cm',
+        category: 'conmemorativo',
+        price: 120000,
+        desc: 'Osarios elegantes en porcelanato, acrílico o vidrio con acabado fotográfico eterno y grabado láser de precisión.',
+        cover: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=800&q=80',
+        specsType: 'lapida',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1544967082-d9d25d867d66?auto=format&fit=crop&w=800&q=80', caption: 'Osario 30x30 Porcelanato Blanco', price: 120000 }
+        ]
+      },
+      {
+        id: 'prod-logos-led',
+        title: 'Logos para Negocios (Con Luces LED y Sin Luces)',
+        category: 'publicidad',
+        price: 280000,
+        desc: 'Avisos corpóreos en acrílico, MDF y acero con iluminación LED neón/retroiluminada o sin luces a la medida de tu local.',
+        cover: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
+        specsType: 'logo',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80', caption: 'Logo Acrílico con Retroiluminación LED Neón', price: 350000 },
+          { img: 'https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80', caption: 'Logo Corpóreo Sin Luces en Relieve 3D', price: 220000 }
+        ]
+      },
+      {
+        id: 'prod-banners',
+        title: 'Banners, Pendones & Adhesivos a Medida',
+        category: 'publicidad',
+        price: 45000,
+        desc: 'Banners publicitarios, pendones con tubo y cuerda, microperforados y vinilos adhesivos en la medida exacta que decidas.',
+        cover: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80',
+        specsType: 'medida',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80', caption: 'Pendón Publicitario Alta Resolución', price: 45000 }
+        ]
+      },
+      {
+        id: 'prod-gran-formato',
+        title: 'Impresiones en Gran Formato',
+        category: 'publicidad',
+        price: 65000,
+        desc: 'Lonas banner, vinilo adhesivo, lona mesh, panaflex y gigantografías con tintas eco-solventes de máxima durabilidad.',
+        cover: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80',
+        specsType: 'medida',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1586075010923-2dd4570fb338?auto=format&fit=crop&w=800&q=80', caption: 'Impresión Plotter Gran Formato', price: 65000 }
+        ]
+      },
+      {
+        id: 'prod-laser',
+        title: 'Grabados y Corte Láser de Precisión',
+        category: 'publicidad',
+        price: 55000,
+        desc: 'Corte y grabado láser en acrílico, MDF, madera, cuero y vidrio para señalética, llaveros, placas y decoración.',
+        cover: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80',
+        specsType: 'medida',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80', caption: 'Corte Láser en Acrílico y Madera', price: 55000 }
+        ]
+      },
+      {
+        id: 'prod-cuadros',
+        title: 'Cuadros Fotográficos (10x15 hasta 100x80 cm)',
+        category: 'cuadros',
+        price: 60000,
+        desc: 'Cuadros en todas las medidas: 10x15, 20x30, 30x40, 40x60, 50x50, 60x80 y 100x80 cm. Retablo, bastidor o marco de lujo.',
+        cover: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80',
+        specsType: 'cuadro',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80', caption: 'Cuadro Retablo HD 50x70 cm', price: 95000 },
+          { img: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b675?auto=format&fit=crop&w=800&q=80', caption: 'Cuadro Lienzo con Bastidor de Madera', price: 130000 }
+        ]
+      },
+      {
+        id: 'prod-fotografia',
+        title: 'Fotografía Profesional para Todo Evento',
+        category: 'cuadros',
+        price: 250000,
+        desc: 'Grados, bodas, 15 años, cumpleaños, eventos empresariales y sesiones en cualquier momento y lugar con entrega digital HD.',
+        cover: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80',
+        specsType: 'evento',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80', caption: 'Cobertura Fotográfica Profesional', price: 250000 }
+        ]
+      },
+      {
+        id: 'prod-tazas',
+        title: 'Tazas Personalizadas (Sencillas, Color y Mágicas)',
+        category: 'personalizados',
+        price: 22000,
+        desc: 'Tazas blancas sencillas, con interior/asa de color, y tazas mágicas que revelan tu foto o logo con bebida caliente.',
+        cover: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=800&q=80',
+        specsType: 'taza',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=800&q=80', caption: 'Taza Mágica Termosensible Personalizada', price: 28000 },
+          { img: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80', caption: 'Taza con Interior de Color y Logo', price: 22000 }
+        ]
+      },
+      {
+        id: 'prod-camisas',
+        title: 'Camisas Estampadas y Sublimadas (Polo y Básicas)',
+        category: 'personalizados',
+        price: 38000,
+        desc: 'Estampado DTF y sublimación full color en camisas tipo Polo, básicas blancas y de colores en todas las tallas (S, M, L, XL, XXL).',
+        cover: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80',
+        specsType: 'camisa',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=80', caption: 'Camiseta Personalizada Full Color', price: 38000 },
+          { img: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=800&q=80', caption: 'Camisa Tipo Polo Estampada', price: 48000 }
+        ]
+      },
+      {
+        id: 'prod-acrilicos',
+        title: 'Reconocimientos y Trofeos en Acrílico',
+        category: 'personalizados',
+        price: 75000,
+        desc: 'Placas conmemorativas, trofeos empresariales y reconocimientos en acrílico cristal con grabado láser o impresión UV.',
+        cover: 'https://images.unsplash.com/photo-1578269174936-2709b6aeb913?auto=format&fit=crop&w=800&q=80',
+        specsType: 'medida',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1578269174936-2709b6aeb913?auto=format&fit=crop&w=800&q=80', caption: 'Reconocimiento en Acrílico Grabado', price: 75000 }
+        ]
+      },
+      {
+        id: 'prod-tarjetas',
+        title: 'Tarjetas de Presentación y Papelería Comercial',
+        category: 'publicidad',
+        price: 50000,
+        desc: 'Tarjetas laminadas mate/brillo, volantes, facturas, talonarios y todo tipo de publicidad impresa para hacer crecer tu negocio.',
+        cover: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80',
+        specsType: 'medida',
+        gallery: [
+          { img: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80', caption: 'Tarjetas de Presentación Premium x1000', price: 50000 }
+        ]
+      }
+    ];
+
+    const DB = {
+      get(key, fallback) {
+        try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+        catch { return fallback; }
+      },
+      set(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+    };
+
+    let products = DB.get('lalo_products_v5', DEFAULT_PRODUCTS);
+    let cart = DB.get('lalo_cart_v5', []);
+    let orders = DB.get('lalo_orders_v5', []);
+    let vaultSessions = DB.get('lalo_vault_v5', [
+      { code: 'LALO-7492', client: 'Sesión Grados 2026 - Andrea', files: ['https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1200&q=90'] }
+    ]);
+    let settings = DB.get('lalo_settings_v5', {
+      bankAcc: '70528068853',
+      whatsapp: '573117053670',
+      aiName: 'Lalo IA',
+      aiGreeting: '¡Hola! Soy Lalo, tu asesor virtual 3D de Lalo.com. Ofrecemos lápidas en porcelanato, logos LED, cuadros, tazas, camisas y fotografía. ¿En qué te puedo ayudar hoy?',
+      adminPass: 'lalo2026'
+    });
+    let analytics = DB.get('lalo_analytics_v5', { visits: 0, productViews: {}, logs: [] });
+
+    function recordAudit(action, detail) {
+      analytics.logs.unshift({ time: new Date().toLocaleString('es-CO'), action, detail });
+      if (analytics.logs.length > 120) analytics.logs.pop();
+      DB.set('lalo_analytics_v5', analytics);
+    }
+
+    analytics.visits += 1;
+    recordAudit('VISITA_WEB', `Visita #${analytics.visits} registrada`);
+
+    function showToast(msg) {
+      const box = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.innerHTML = `<i class="fa-solid fa-sparkles" style="color:var(--cyan)"></i> ${msg}`;
+      box.appendChild(el);
+      setTimeout(() => el.remove(), 3800);
+    }
+
+    const formatCOP = (n) => '$' + Number(n || 0).toLocaleString('es-CO') + ' COP';
+
+    /* ==========================================================================
+       2. RENDERIZADO DE CATÁLOGOS Y GALERÍAS
+       ========================================================================== */
+    function renderProducts(filter = 'all') {
+      const grid = document.getElementById('productsGrid');
+      const filtered = filter === 'all' ? products : products.filter(p => p.category === filter);
+      grid.innerHTML = filtered.map(p => `
+        <div class="product-card">
+          <div class="product-img-wrap" onclick="openProductGallery('${p.id}')">
+            <img src="${p.cover}" alt="${p.title}" loading="lazy" />
+            <span class="cat-badge">${p.category.toUpperCase()}</span>
+            <span class="gallery-count-badge"><i class="fa-solid fa-images"></i> ${p.gallery.length} fotos HD</span>
+          </div>
+          <div class="product-body">
+            <h3>${p.title}</h3>
+            <p>${p.desc}</p>
+            <div class="product-price">Desde ${formatCOP(p.price)}</div>
+            <div class="product-actions">
+              <button class="btn btn-outline btn-sm" onclick="openProductGallery('${p.id}')">
+                <i class="fa-solid fa-eye"></i> Ver Galería
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="addToCart('${p.id}')">
+                <i class="fa-solid fa-cart-plus"></i> Pedir
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    window.openProductGallery = function(prodId) {
+      const prod = products.find(p => p.id === prodId);
+      if (!prod) return;
+
+      analytics.productViews[prod.title] = (analytics.productViews[prod.title] || 0) + 1;
+      recordAudit('CONSULTA_GALERIA', `Abrió galería de: ${prod.title}`);
+
+      document.getElementById('galModalTitle').textContent = prod.title;
+      document.getElementById('galModalDesc').textContent = prod.desc;
+      document.getElementById('galModalPrice').textContent = formatCOP(prod.price);
+
+      const orderBtn = document.getElementById('galModalOrderBtn');
+      orderBtn.onclick = () => {
+        document.getElementById('productGalleryModal').classList.add('hidden');
+        addToCart(prod.id);
+        openCart();
+      };
+
+      const grid = document.getElementById('galModalImagesGrid');
+      grid.innerHTML = prod.gallery.map((item, idx) => `
+        <div class="gallery-sample-card">
+          <img src="${item.img}" alt="${item.caption || prod.title}" />
+          <div class="gallery-sample-info">
+            <strong>${item.caption || 'Diseño #' + (idx + 1)}</strong>
+            ${item.price ? `<div style="color:var(--yellow); font-weight:800; margin-top:4px;">${formatCOP(item.price)}</div>` : ''}
+            <button class="btn btn-cyan btn-sm btn-block" style="margin-top:10px;" onclick="selectSpecificDesign('${prod.id}', ${idx})">
+              Elegir Este Diseño
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('productGalleryModal').classList.remove('hidden');
+      aiSpeak(`Estás viendo la galería de ${prod.title}. Contamos con ${prod.gallery.length} muestras de alta calidad.`);
+    };
+
+    window.selectSpecificDesign = function(prodId, idx) {
+      const prod = products.find(p => p.id === prodId);
+      const item = prod.gallery[idx];
+      cart.push({
+        id: prod.id,
+        title: `${prod.title} (${item.caption || 'Diseño #' + (idx+1)})`,
+        price: item.price || prod.price,
+        specsType: prod.specsType
+      });
+      DB.set('lalo_cart_v5', cart);
+      updateCartBadge();
+      document.getElementById('productGalleryModal').classList.add('hidden');
+      openCart();
+    };
+
+    /* ==========================================================================
+       3. CARRITO Y ESPECIFICACIONES DINÁMICAS
+       ========================================================================== */
+    window.addToCart = function(prodId) {
+      const prod = products.find(p => p.id === prodId);
+      if (!prod) return;
+      cart.push({ id: prod.id, title: prod.title, price: prod.price, specsType: prod.specsType });
+      DB.set('lalo_cart_v5', cart);
+      updateCartBadge();
+      showToast(`Añadido al pedido: ${prod.title}`);
+    };
+
+    function updateCartBadge() {
+      document.getElementById('cartCount').textContent = cart.length;
+    }
+
+    function openCart() {
+      const container = document.getElementById('cartItemsContainer');
+      const specsBox = document.getElementById('dynamicSpecsContainer');
+      let total = 0;
+
+      if (cart.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-muted);">Tu carrito está vacío. Elige productos del catálogo.</p>';
+        specsBox.innerHTML = '';
+      } else {
+        container.innerHTML = cart.map((c, i) => {
+          total += Number(c.price);
+          return `
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; background:#07090e; border-radius:12px; margin-bottom:10px;">
+              <div><strong>${c.title}</strong><br><small style="color:var(--yellow)">${formatCOP(c.price)}</small></div>
+              <button type="button" class="btn btn-ghost btn-sm" onclick="removeCartItem(${i})"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          `;
+        }).join('');
+
+        const types = [...new Set(cart.map(c => c.specsType))];
+        let specHTML = '';
+        if (types.includes('lapida')) {
+          specHTML += `
+            <div class="form-grid-2">
+              <div class="form-group"><label>Material Lápida / Osario *</label>
+                <select id="specMaterial"><option>Porcelanato Alta Resistencia</option><option>Acrílico Premium</option><option>Vidrio Templado</option><option>Baldosa Cerámica</option></select>
+              </div>
+              <div class="form-group"><label>Medida Exacta *</label>
+                <select id="specMeasure"><option>50x50 cm (Lápida Estándar)</option><option>30x30 cm (Osario Estándar)</option><option>Medida personalizada a definir</option></select>
+              </div>
+            </div>`;
         }
-
-        async function deleteClient(code) {
-            await fetch('/api/admin/delete-client', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: globalPassword, code })
-            });
-            loadAdminLists();
+        if (types.includes('logo')) {
+          specHTML += `
+            <div class="form-grid-2">
+              <div class="form-group"><label>Tipo de Iluminación *</label>
+                <select id="specLed"><option>Con Luces LED (Neón / Retroiluminado)</option><option>Sin Luces (Corpóreo 3D)</option></select>
+              </div>
+              <div class="form-group"><label>Medidas Aproximadas (Ancho x Alto) *</label>
+                <input type="text" id="specLogoSize" placeholder="Ej: 150 cm x 80 cm" />
+              </div>
+            </div>`;
         }
-
-        async function deletePortfolio(id) {
-            await fetch('/api/admin/delete-portfolio', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: globalPassword, id })
-            });
-            loadAdminLists();
-            fetchPortfolio();
+        if (types.includes('camisa')) {
+          specHTML += `
+            <div class="form-grid-2">
+              <div class="form-group"><label>Estilo de Camisa *</label>
+                <select id="specShirtType"><option>Tipo Polo</option><option>Básica Algodón (Estampado DTF)</option><option>Básica Sublimada Full Color</option></select>
+              </div>
+              <div class="form-group"><label>Tallas y Cantidades *</label>
+                <input type="text" id="specShirtSize" placeholder="Ej: 2 Talla M, 1 Talla L" />
+              </div>
+            </div>`;
         }
+        if (types.includes('taza')) {
+          specHTML += `
+            <div class="form-group"><label>Tipo de Taza *</label>
+              <select id="specMugType"><option>Taza Mágica (Revela con líquido caliente)</option><option>Taza con Interior y Asa de Color</option><option>Taza Blanca Básica</option></select>
+            </div>`;
+        }
+        if (types.includes('cuadro')) {
+          specHTML += `
+            <div class="form-group"><label>Tamaño del Cuadro *</label>
+              <select id="specFrameSize"><option>10x15 cm</option><option>20x30 cm</option><option>30x40 cm</option><option>40x60 cm</option><option>50x50 cm</option><option>60x80 cm</option><option>100x80 cm (Gran Formato)</option></select>
+            </div>`;
+        }
+        specsBox.innerHTML = specHTML;
+      }
 
-        // Cambiar contraseña desde el panel interior
-        document.getElementById('formChangePassInside').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const currentPassword = document.getElementById('inputInsideOld').value;
-            const newPassword = document.getElementById('inputInsideNew').value;
-            const fb = document.getElementById('msgInsidePassFeedback');
+      document.getElementById('cartTotalAmount').textContent = formatCOP(total);
+      document.getElementById('cartModal').classList.remove('hidden');
+    }
 
-            const res = await fetch('/api/set-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ currentPassword, newPassword })
-            });
-            const data = await res.json();
-            if (data.success) {
-                globalPassword = newPassword;
-                fb.className = 'feedback success';
-                fb.textContent = data.message;
-                e.target.reset();
-            } else {
-                fb.className = 'feedback error';
-                fb.textContent = data.message;
-            }
-        });
+    window.removeCartItem = function(idx) {
+      cart.splice(idx, 1);
+      DB.set('lalo_cart_v5', cart);
+      updateCartBadge();
+      openCart();
+    };
 
-        fetchPortfolio();
-    </script>
+    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (cart.length === 0) return showToast('Agrega productos antes de confirmar.');
+
+      const total = cart.reduce((acc, item) => acc + Number(item.price), 0);
+      const payMethod = document.querySelector('input[name="payMethod"]:checked').value;
+      const orderId = 'LALO-' + Math.floor(10000 + Math.random() * 90000);
+
+      const extraSpecs = Array.from(document.querySelectorAll('#dynamicSpecsContainer select, #dynamicSpecsContainer input'))
+        .map(el => el.value).filter(Boolean).join(' | ');
+
+      const newOrder = {
+        id: orderId,
+        date: new Date().toLocaleString('es-CO'),
+        customer: document.getElementById('ordName').value,
+        docId: document.getElementById('ordDocId').value,
+        phone: document.getElementById('ordPhone').value,
+        email: document.getElementById('ordEmail').value,
+        city: document.getElementById('ordCity').value,
+        address: document.getElementById('ordAddress').value,
+        deliveryDate: document.getElementById('ordDeliveryDate').value,
+        specs: `${extraSpecs} — Notas: ${document.getElementById('ordSpecsNotes').value}`,
+        items: cart.map(c => c.title).join(', '),
+        total,
+        payMethod,
+        payRef: document.getElementById('ordPayRef').value
+      };
+
+      orders.unshift(newOrder);
+      DB.set('lalo_orders_v5', orders);
+      recordAudit('NUEVO_PEDIDO', `${orderId} | Cliente: ${newOrder.customer} | Total: ${formatCOP(total)}`);
+
+      cart = [];
+      DB.set('lalo_cart_v5', cart);
+      updateCartBadge();
+      document.getElementById('cartModal').classList.add('hidden');
+      showToast(`¡Pedido ${orderId} registrado exitosamente!`);
+      aiSpeak(`¡Perfecto ${newOrder.customer}! Tu pedido ${orderId} ha sido procesado. Te contactaremos por WhatsApp.`);
+    });
+
+    /* ==========================================================================
+       4. ZONA CLIENTES (BÓVEDA HD)
+       ========================================================================== */
+    document.getElementById('clientAccessForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const code = document.getElementById('clientCodeInput').value.trim().toUpperCase();
+      const session = vaultSessions.find(s => s.code === code);
+      const resBox = document.getElementById('clientGalleryResult');
+      if (!session) {
+        showToast('Código no encontrado. Verifica tu código con Lalo.com');
+        return;
+      }
+      resBox.classList.remove('hidden');
+      resBox.innerHTML = `
+        <div class="admin-form-card">
+          <h3 style="color:var(--cyan); margin-bottom:14px;">Bóveda Autorizada: ${session.client} (${session.code})</h3>
+          <p style="color:var(--text-muted); margin-bottom:14px;">Archivos en resolución original exacta sin compresión[cite: 1].</p>
+          <div class="product-gallery-grid">
+            ${session.files.map((url, i) => `
+              <div class="gallery-sample-card">
+                <img src="${url}" alt="Archivo HD ${i+1}" />
+                <div class="gallery-sample-info">
+                  <a href="${url}" download="Lalo_Original_${i+1}.jpg" target="_blank" class="btn btn-cyan btn-sm btn-block">
+                    <i class="fa-solid fa-cloud-arrow-down"></i> Descargar Original HD
+                  </a>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    });
+
+    /* ==========================================================================
+       5. PANEL DE AUTOR & AJUSTES
+       ========================================================================== */
+    document.getElementById('openAdminAuthBtn').onclick = () => document.getElementById('adminAuthModal').classList.remove('hidden');
+    document.getElementById('openCartBtn').onclick = openCart;
+
+    document.querySelectorAll('.close-modal').forEach(btn => {
+      btn.onclick = () => document.getElementById(btn.dataset.close).classList.add('hidden');
+    });
+
+    document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (document.getElementById('adminPassInput').value === settings.adminPass) {
+        document.getElementById('adminAuthModal').classList.add('hidden');
+        document.getElementById('adminDashboardModal').classList.remove('hidden');
+        refreshAdminPanel();
+        recordAudit('ACCESO_AUTOR', 'El autor ingresó al Panel Pro');
+      } else {
+        showToast('Contraseña incorrecta');
+      }
+    });
+
+    document.querySelectorAll('.admin-tab').forEach(tab => {
+      tab.onclick = () => {
+        document.querySelectorAll('.admin-tab, .admin-tab-content').forEach(el => el.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      };
+    });
+
+    function fileToBase64(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById('uploadGallerySampleForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const prodId = document.getElementById('galleryTargetProduct').value;
+      const caption = document.getElementById('sampleCaption').value;
+      const price = Number(document.getElementById('samplePrice').value) || null;
+      const files = document.getElementById('sampleImageFiles').files;
+
+      const prod = products.find(p => p.id === prodId);
+      if (!prod || !files.length) return;
+
+      for (const file of files) {
+        const b64 = await fileToBase64(file);
+        prod.gallery.push({ img: b64, caption, price });
+      }
+      DB.set('lalo_products_v5', products);
+      recordAudit('SUBIDA_GALERIA', `Se subieron ${files.length} foto(s) a ${prod.title}`);
+      renderProducts();
+      refreshAdminPanel();
+      e.target.reset();
+      showToast(`¡${files.length} imagen(es) añadida(s) a ${prod.title}!`);
+    });
+
+    document.getElementById('newProductForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const coverFile = document.getElementById('newProdCover').files[0];
+      const coverUrl = coverFile ? await fileToBase64(coverFile) : 'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80';
+      const newProd = {
+        id: 'prod-' + Date.now(),
+        title: document.getElementById('newProdTitle').value,
+        category: document.getElementById('newProdCat').value,
+        price: Number(document.getElementById('newProdPrice').value),
+        desc: document.getElementById('newProdDesc').value,
+        cover: coverUrl,
+        specsType: 'medida',
+        gallery: [{ img: coverUrl, caption: document.getElementById('newProdTitle').value, price: Number(document.getElementById('newProdPrice').value) }]
+      };
+      products.unshift(newProd);
+      DB.set('lalo_products_v5', products);
+      recordAudit('NUEVO_PRODUCTO', `Creado producto: ${newProd.title}`);
+      renderProducts();
+      refreshAdminPanel();
+      e.target.reset();
+      showToast('Producto creado con éxito');
+    });
+
+    window.updateProductPrice = function(id, newPrice) {
+      const p = products.find(x => x.id === id);
+      if (!p) return;
+      p.price = Number(newPrice);
+      DB.set('lalo_products_v5', products);
+      recordAudit('MODIFICAR_PRECIO', `${p.title} actualizado a ${formatCOP(newPrice)}`);
+      renderProducts();
+      showToast('Precio actualizado');
+    };
+
+    window.deleteGallerySample = function(prodId, idx) {
+      const p = products.find(x => x.id === prodId);
+      if (!p || p.gallery.length <= 1) return showToast('Debe quedar al menos 1 imagen de muestra');
+      p.gallery.splice(idx, 1);
+      DB.set('lalo_products_v5', products);
+      recordAudit('BORRAR_MUESTRA', `Imagen eliminada de ${p.title}`);
+      renderProducts();
+      refreshAdminPanel();
+    };
+
+    document.getElementById('createVaultForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const client = document.getElementById('vaultClientName').value;
+      const files = document.getElementById('vaultFiles').files;
+      const urls = [];
+      for (const f of files) urls.push(await fileToBase64(f));
+      const code = 'LALO-' + Math.floor(1000 + Math.random() * 9000);
+      vaultSessions.unshift({ code, client, files: urls });
+      DB.set('lalo_vault_v5', vaultSessions);
+      recordAudit('BOVEDA_CLIENTE', `Código ${code} creado para ${client}`);
+      refreshAdminPanel();
+      showToast(`Código HD generado: ${code}`);
+    });
+
+    document.getElementById('globalSettingsForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      settings.bankAcc = document.getElementById('setBankAcc').value || settings.bankAcc;
+      settings.whatsapp = document.getElementById('setWhatsapp').value || settings.whatsapp;
+      settings.aiName = document.getElementById('setAiName').value || settings.aiName;
+      settings.aiGreeting = document.getElementById('setAiGreeting').value || settings.aiGreeting;
+      const newPass = document.getElementById('setAdminPass').value.trim();
+      if (newPass) settings.adminPass = newPass;
+
+      document.getElementById('footerBankAcc').textContent = settings.bankAcc;
+      document.getElementById('checkoutBankNumber').textContent = settings.bankAcc;
+
+      DB.set('lalo_settings_v5', settings);
+      recordAudit('AJUSTES_GENERALES', 'Configuración actualizada');
+      showToast('Ajustes guardados');
+    });
+
+    function refreshAdminPanel() {
+      const sel = document.getElementById('galleryTargetProduct');
+      sel.innerHTML = products.map(p => `<option value="${p.id}">${p.title} (${p.gallery.length} fotos)</option>`).join('');
+
+      document.getElementById('adminGalleryPreviewList').innerHTML = products.map(p => `
+        <div style="margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--border-glass);">
+          <strong style="color:var(--cyan)">${p.title}</strong> (${p.gallery.length} fotos)
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;">
+            ${p.gallery.map((g, idx) => `
+              <div style="position:relative; width:64px; height:64px;">
+                <img src="${g.img}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;" />
+                <button onclick="deleteGallerySample('${p.id}', ${idx})" style="position:absolute; top:-4px; right:-4px; background:red; color:#fff; border:none; border-radius:50%; width:18px; height:18px; font-size:11px; cursor:pointer;">&times;</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('adminProductsManageList').innerHTML = products.map(p => `
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; background:#121827; padding:10px; border-radius:10px;">
+          <span style="font-size:0.86rem; flex:1;">${p.title}</span>
+          <input type="number" value="${p.price}" onchange="updateProductPrice('${p.id}', this.value)" style="width:115px; background:#07090e; color:#ffd600; border:1px solid #333; padding:6px; border-radius:6px;" />
+        </div>
+      `).join('');
+
+      const totalRevenue = orders.reduce((sum, o) => sum + Number(o.total), 0);
+      const topProd = Object.entries(analytics.productViews).sort((a,b) => b[1]-a[1])[0]?.[0] || 'Lápidas 50x50';
+      document.getElementById('aiKpiGrid').innerHTML = `
+        <div class="kpi-box"><strong>${analytics.visits}</strong><span>Visitas Totales</span></div>
+        <div class="kpi-box"><strong>${orders.length}</strong><span>Pedidos Registrados</span></div>
+        <div class="kpi-box"><strong>${formatCOP(totalRevenue)}</strong><span>Ingresos Contabilizados</span></div>
+        <div class="kpi-box"><strong style="font-size:0.95rem;">${topProd}</strong><span>Producto Destacado</span></div>
+      `;
+
+      document.getElementById('auditLogContainer').innerHTML = analytics.logs.map(l => `
+        <div style="padding:7px; border-bottom:1px solid rgba(255,255,255,0.06);">
+          <span style="color:var(--cyan)">[${l.time}]</span> <strong>${l.action}:</strong> ${l.detail}
+        </div>
+      `).join('');
+
+      document.getElementById('adminOrdersList').innerHTML = orders.length ? orders.map(o => `
+        <div class="admin-form-card" style="margin-bottom:14px;">
+          <div style="display:flex; justify-content:space-between;">
+            <strong style="color:var(--yellow)">${o.id} — ${o.customer} (CC/NIT: ${o.docId})</strong>
+            <span>${o.date}</span>
+          </div>
+          <p style="font-size:0.86rem; margin:6px 0;"><strong>Tel:</strong> ${o.phone} | <strong>Ciudad:</strong> ${o.city} | <strong>Entrega:</strong> ${o.deliveryDate}</p>
+          <p style="font-size:0.86rem;"><strong>Items:</strong> ${o.items}</p>
+          <p style="font-size:0.86rem; color:var(--cyan);"><strong>Especificaciones:</strong> ${o.specs}</p>
+          <p style="font-size:0.88rem; margin-top:6px;"><strong>Total:</strong> ${formatCOP(o.total)} — <strong>Pago:</strong> ${o.payMethod} (Ref: ${o.payRef})</p>
+        </div>
+      `).join('') : '<p style="color:var(--text-muted)">No hay pedidos registrados aún.</p>';
+
+      document.getElementById('vaultSessionsAdminList').innerHTML = vaultSessions.map(v => `
+        <div style="padding:10px; background:#121827; border-radius:8px; margin-bottom:8px;">
+          <strong>${v.code}</strong> — ${v.client} (${v.files.length} archivos HD)
+        </div>
+      `).join('');
+
+      document.getElementById('setBankAcc').value = settings.bankAcc;
+      document.getElementById('setWhatsapp').value = settings.whatsapp;
+      document.getElementById('setAiName').value = settings.aiName;
+      document.getElementById('setAiGreeting').value = settings.aiGreeting;
+    }
+
+    /* ==========================================================================
+       6. ASISTENTE 3D CON RECONOCIMIENTO DE VOZ REAL & SÍNTESIS
+       ========================================================================== */
+    let voiceEnabled = true;
+    let isSpeaking = false;
+
+    function aiSpeak(text) {
+      addAiMessage(text, 'ai');
+      if (!voiceEnabled || !('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'es-CO';
+      utter.rate = 1.05;
+      utter.pitch = 1.1;
+      utter.onstart = () => { isSpeaking = true; };
+      utter.onend = () => { isSpeaking = false; };
+      window.speechSynthesis.speak(utter);
+    }
+
+    function addAiMessage(text, sender) {
+      const box = document.getElementById('aiMessages');
+      const div = document.createElement('div');
+      div.className = sender === 'ai' ? 'msg-ai' : 'msg-user';
+      div.textContent = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    document.getElementById('toggleVoiceBtn').onclick = () => {
+      voiceEnabled = !voiceEnabled;
+      document.getElementById('toggleVoiceBtn').innerHTML = voiceEnabled
+        ? '<i class="fa-solid fa-volume-high"></i>'
+        : '<i class="fa-solid fa-volume-xmark"></i>';
+    };
+
+    document.getElementById('minimizeAiBtn').onclick = () => {
+      document.getElementById('aiMessages').classList.toggle('hidden');
+      document.getElementById('aiChatForm').classList.toggle('hidden');
+    };
+
+    // Integración de Reconocimiento de Voz Real por Micrófono
+    const micBtn = document.getElementById('aiMicBtn');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'es-CO';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      micBtn.onclick = () => {
+        try {
+          recognition.start();
+          micBtn.classList.add('listening');
+          showToast('Escuchando tu voz... Habla ahora');
+        } catch(e) {
+          recognition.stop();
+          micBtn.classList.remove('listening');
+        }
+      };
+
+      recognition.onresult = (event) => {
+        const speechToText = event.results[0][0].transcript;
+        micBtn.classList.remove('listening');
+        document.getElementById('aiUserInput').value = speechToText;
+        processUserQuery(speechToText);
+      };
+
+      recognition.onerror = () => {
+        micBtn.classList.remove('listening');
+        showToast('No se detectó audio claramente. Intenta de nuevo.');
+      };
+
+      recognition.onend = () => {
+        micBtn.classList.remove('listening');
+      };
+    } else {
+      micBtn.style.display = 'none'; // Ocultar si el navegador no lo soporta
+    }
+
+    document.getElementById('aiChatForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('aiUserInput');
+      const q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+      processUserQuery(q);
+    });
+
+    function processUserQuery(q) {
+      addAiMessage(q, 'user');
+      const low = q.toLowerCase();
+      let reply = '';
+      if (low.includes('pago') || low.includes('nequi') || low.includes('banco') || low.includes('pse')) {
+        reply = `Puedes pagar por PSE, Bancolombia, o transferir desde tu Nequi a nuestra cuenta de ahorros Bancolombia ${settings.bankAcc}.`;
+      } else if (low.includes('lapida') || low.includes('osario')) {
+        reply = 'Fabricamos lápidas 50x50 y osarios 30x30 en porcelanato, acrílico y vidrio. Toca "Ver Galería" en el catálogo para ver las muestras.';
+      } else if (low.includes('logo') || low.includes('led')) {
+        reply = 'Hacemos avisos corpóreos y logos para negocios con luces LED neón o sin luces a la medida exacta que desees.';
+      } else if (low.includes('taza') || low.includes('camisa')) {
+        reply = 'Personalizamos tazas sencillas, de colores y mágicas; también estampamos y sublimamos camisas tipo Polo y básicas en todas las tallas.';
+      } else if (low.includes('visita') || low.includes('cuanto') || low.includes('pedido')) {
+        const total = orders.reduce((s, o) => s + Number(o.total), 0);
+        reply = `Llevo el control exacto: hay ${analytics.visits} visitas, ${orders.length} pedidos registrados y ${formatCOP(total)} en contabilidad.`;
+      } else {
+        reply = '¡Excelente! En Lalo.com hacemos lápidas, cuadros, fotografía, banners, corte láser, logos LED, tazas y camisas. Toca cualquier producto para ver su galería.';
+      }
+      setTimeout(() => aiSpeak(reply), 400);
+    }
+
+    // Personaje 3D Camaleón CMYK
+    function init3DChameleon() {
+      const container = document.getElementById('ai-3d-container');
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, container.clientWidth / container.clientHeight, 0.1, 100);
+      camera.position.set(0, 0.3, 4.3);
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(container.clientWidth, container.clientHeight);
+      container.appendChild(renderer.domElement);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.95));
+      const dirLight = new THREE.DirectionalLight(0x00e5ff, 1.2);
+      dirLight.position.set(3, 4, 5);
+      scene.add(dirLight);
+
+      const character = new THREE.Group();
+
+      const headMat = new THREE.MeshStandardMaterial({ color: 0x00b8ff, roughness: 0.35 });
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.82, 32, 32), headMat);
+      head.scale.set(1.05, 0.92, 0.95);
+      head.position.y = 0.65;
+      character.add(head);
+
+      const crestMat = new THREE.MeshStandardMaterial({ color: 0xff007f, roughness: 0.3 });
+      const crest = new THREE.Mesh(new THREE.ConeGeometry(0.32, 0.75, 24), crestMat);
+      crest.position.set(0, 1.48, -0.05);
+      crest.rotation.x = -0.2;
+      character.add(crest);
+
+      const jawMat = new THREE.MeshStandardMaterial({ color: 0xffd600, roughness: 0.4 });
+      const jaw = new THREE.Mesh(new THREE.SphereGeometry(0.68, 24, 24), jawMat);
+      jaw.scale.set(1.12, 0.55, 0.92);
+      jaw.position.set(0, 0.35, 0.16);
+      character.add(jaw);
+
+      const eyeWhiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+      const pupilMat = new THREE.MeshStandardMaterial({ color: 0x1a120b });
+      [-0.42, 0.42].forEach(x => {
+        const eye = new THREE.Mesh(new THREE.SphereGeometry(0.28, 24, 24), eyeWhiteMat);
+        eye.position.set(x, 0.82, 0.62);
+        const pupil = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16), pupilMat);
+        pupil.position.set(x * 0.95, 0.82, 0.84);
+        character.add(eye, pupil);
+      });
+
+      const shirtMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.5 });
+      const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.65, 1.1, 24), shirtMat);
+      torso.position.y = -0.45;
+      character.add(torso);
+
+      const badgeMat = new THREE.MeshBasicMaterial({ color: 0xff007f });
+      const chestLogo = new THREE.Mesh(new THREE.CircleGeometry(0.32, 24), badgeMat);
+      chestLogo.position.set(0, -0.42, 0.61);
+      character.add(chestLogo);
+
+      const armMat = new THREE.MeshStandardMaterial({ color: 0xff007f });
+      const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.75, 16), armMat);
+      leftArm.position.set(-0.72, -0.4, 0.1);
+      leftArm.rotation.z = 0.45;
+      const rightArm = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.12, 0.75, 16), armMat);
+      rightArm.position.set(0.72, -0.4, 0.1);
+      rightArm.rotation.z = -0.45;
+      character.add(leftArm, rightArm);
+
+      scene.add(character);
+
+      container.onclick = () => aiSpeak(settings.aiGreeting);
+
+      let clock = 0;
+      function animate() {
+        requestAnimationFrame(animate);
+        clock += 0.04;
+        character.position.y = Math.sin(clock) * 0.08;
+        character.rotation.y = Math.sin(clock * 0.5) * 0.25;
+        if (isSpeaking) {
+          jaw.position.y = 0.32 + Math.sin(clock * 6) * 0.06;
+          rightArm.rotation.z = -0.45 + Math.sin(clock * 4) * 0.35;
+        } else {
+          jaw.position.y = 0.35;
+        }
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    document.querySelectorAll('.store-filter-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.store-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderProducts(btn.dataset.filter);
+      };
+    });
+
+    renderProducts();
+    updateCartBadge();
+    init3DChameleon();
+    addAiMessage(settings.aiGreeting, 'ai');
+  </script>
 </body>
 </html>
