@@ -1,10 +1,9 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lalo.com | Agencia Publicitaria & Fotografía Sin Compresión</title>
+    <title>Lalo.com | Agencia Publicitaria & Fotografía Profesional</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +11,7 @@
 </head>
 <body>
 
+    <!-- BARRA DE NAVEGACIÓN -->
     <header class="navbar">
         <a href="#" class="brand-logo" aria-label="Lalo.com Agencia Publicitaria">
             <div class="brand-main">
@@ -19,12 +19,14 @@
             </div>
             <span class="brand-sub">A G E N C I A &nbsp; P U B L I C I T A R I A</span>
         </a>
-        <nav>
-            <a href="#galeria">Galería</a>
-            <a href="#admin" class="btn-nav">Acceso Exclusivo</a>
+        <nav class="nav-links">
+            <a href="#portafolio">Trabajos & Referencias</a>
+            <a href="#area-clientes" class="nav-client">Acceso Clientes</a>
+            <a href="#area-autor" class="nav-author">Zona Autor</a>
         </nav>
     </header>
 
+    <!-- SECCIÓN HERO / INICIO -->
     <section class="hero">
         <div class="hero-glow glow-cyan"></div>
         <div class="hero-glow glow-magenta"></div>
@@ -36,21 +38,273 @@
                 <span class="dot-y"></span>
                 <span class="dot-k"></span>
             </div>
-            <span class="badge">CALIDAD NATIVA • 100% SIN COMPRESIÓN</span>
-            <h1>Cada píxel conserva<br>el impacto de tu marca</h1>
-            <p>Plataforma privada de <strong>Lalo.com Agencia Publicitaria</strong>. Visualiza y descarga tus sesiones fotográficas profesionales con la resolución exacta de cámara, sin pérdida de color ni algoritmos de compresión.</p>
+            <span class="badge">FOTOGRAFÍA PROFESIONAL & PUBLICIDAD</span>
+            <h1>Capturamos la esencia,<br>proyectamos tu marca</h1>
+            <p>Plataforma exclusiva de <strong>Lalo.com</strong>. Calidad nativa exacta sin compresión para clientes con código privado, y portafolio público de alto impacto.</p>
             <div class="hero-actions">
-                <a href="#galeria" class="btn-primary">Ver Entregas</a>
-                <a href="#admin" class="btn-secondary">Subir Fotografías</a>
+                <a href="#portafolio" class="btn-primary">Ver Trabajos y Referencias</a>
+                <a href="#area-clientes" class="btn-secondary">Ingresar mi Código de Cliente</a>
             </div>
         </div>
     </section>
 
-    <section id="admin" class="admin-panel">
+    <!-- 1. PORTAFOLIO PÚBLICO (Referencias y tipos de productos que hacen) -->
+    <section id="portafolio" class="public-portfolio">
+        <div class="container">
+            <div class="section-title">
+                <span class="subtitle-cmyk">NUESTRO TRABAJO & TRAYECTORIA</span>
+                <h2>Trabajos y Referencias Publicitarias</h2>
+                <p>Explora nuestras producciones y descubre el nivel de calidad visual que aportamos a cada proyecto.</p>
+            </div>
+
+            <div class="portfolio-grid">
+                <article class="portfolio-item">
+                    <div class="portfolio-img">
+                        <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?q=95&w=1000&auto=format&fit=crop" alt="Campaña Publicitaria">
+                        <span class="tag-cat">Campaña Comercial</span>
+                    </div>
+                    <div class="portfolio-desc">
+                        <h3>Editorial & Moda</h3>
+                        <p>Iluminación de estudio precisa y revelado de alto nivel para marcas de indumentaria.</p>
+                    </div>
+                </article>
+
+                <article class="portfolio-item">
+                    <div class="portfolio-img">
+                        <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=95&w=1000&auto=format&fit=crop" alt="Fotografía de Producto">
+                        <span class="tag-cat">Producto & E-commerce</span>
+                    </div>
+                    <div class="portfolio-desc">
+                        <h3>Detalle Macro de Producto</h3>
+                        <p>Nitidez absoluta y fidelidad de color milimétrica para catálogos corporativos.</p>
+                    </div>
+                </article>
+
+                <article class="portfolio-item">
+                    <div class="portfolio-img">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=95&w=1000&auto=format&fit=crop" alt="Retrato Corporativo">
+                        <span class="tag-cat">Retrato Profesional</span>
+                    </div>
+                    <div class="portfolio-desc">
+                        <h3>Retratos Ejecutivos</h3>
+                        <p>Imagen institucional de gran formato para directivos y personalidades.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. ÁREA DE CLIENTES (Acceso por Código Privado) -->
+    <section id="area-clientes" class="client-access-section">
+        <div class="container">
+            <div class="access-card">
+                <div class="cmyk-top-border"></div>
+                <div class="access-header">
+                    <span class="badge-client">🔑 ACCESO PRIVADO DE CLIENTES</span>
+                    <h2>Visualiza y Descarga Tus Imágenes</h2>
+                    <p>Introduce el código único otorgado por Lalo.com para acceder exclusivamente a tu sesión en calidad original exacta.</p>
+                </div>
+
+                <form class="code-form" action="#galeria-cliente" method="get">
+                    <div class="input-group">
+                        <label for="client-code">Código Único de Sesión</label>
+                        <input type="text" id="client-code" placeholder="Ej. LALO-2026-SOFIA" required>
+                    </div>
+                    <button type="submit" class="btn-client-access">Ver Mis Fotografías</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- GALERÍA PRIVADA DEL CLIENTE (Se activa al ingresar el código) -->
+    <section id="galeria-cliente" class="client-gallery-section">
+        <div class="container">
+            <div class="section-title">
+                <span class="subtitle-cmyk">ENTREGA EXCLUSIVA</span>
+                <h2>Tu Sesión Fotográfica (Calidad Intacta)</h2>
+                <p>Tus imágenes están listas en resolución nativa de cámara. Descárgalas sin compresión ni pérdida de detalle.</p>
+            </div>
+
+            <div class="gallery-grid">
+                <article class="photo-card">
+                    <div class="photo-wrapper">
+                        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=95&w=1200&auto=format&fit=crop" alt="Foto Privada">
+                        <div class="photo-specs">
+                            <span class="spec-res">6000 × 4000 px</span>
+                            <span class="spec-tag">28.4 MB • NATIVO</span>
+                        </div>
+                    </div>
+                    <div class="photo-info">
+                        <div>
+                            <h3>Sesión Personalizada #01</h3>
+                            <p>RAW / TIFF Convertido • 100% Calidad</p>
+                        </div>
+                        <a href="https://images.unsplash.com/photo-1519741497674-611481863552?q=100" download="LaloCom_Sesion_01.jpg" class="btn-download">
+                            <span>Descargar Original</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </a>
+                    </div>
+                </article>
+
+                <article class="photo-card">
+                    <div class="photo-wrapper">
+                        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=95&w=1200&auto=format&fit=crop" alt="Foto Privada">
+                        <div class="photo-specs">
+                            <span class="spec-res">7952 × 5304 px</span>
+                            <span class="spec-tag">42.1 MB • NATIVO</span>
+                        </div>
+                    </div>
+                    <div class="photo-info">
+                        <div>
+                            <h3>Sesión Personalizada #02</h3>
+                            <p>RAW / TIFF Convertido • 100% Calidad</p>
+                        </div>
+                        <a href="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=100" download="LaloCom_Sesion_02.jpg" class="btn-download">
+                            <span>Descargar Original</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        </a>
+                    </div>
+                </article>
+            </div>
+            <div class="text-center-action">
+                <a href="#area-clientes" class="btn-secondary">← Salir o Ingresar Otro Código</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. ZONA DE AUTOR (Con clave Foto.lalo y generador de códigos) -->
+    <section id="area-autor" class="admin-panel">
         <div class="container">
             <div class="admin-card">
                 <div class="cmyk-top-border"></div>
-                <div class="admin-header">
-                    <span class="lock-badge">🔒 PANEL PRIVADO DEL FOTÓGRAFO</span>
-                    <h2>Carga de Archivos Maestros</h2>
-                    <p>Acceso exclusivo para administración de L
+
+                <!-- PASO A: Login de Autor (Clave: Foto.lalo) -->
+                <div class="admin-view view-login">
+                    <div class="admin-header">
+                        <span class="lock-badge">🔒 ACCESO EXCLUSIVO DEL AUTOR</span>
+                        <h2>Panel de Control & Subida</h2>
+                        <p>Introduce tu clave de autor (<strong>Foto.lalo</strong>) para gestionar entregas y referencias.</p>
+                    </div>
+                    
+                    <form class="upload-form" action="#dashboard-autor" method="get">
+                        <div class="input-group">
+                            <label for="admin-pass">Clave Maestra de Autor</label>
+                            <!-- Para entrar fácil mediante HTML puro, la clave se valida o puedes escribir Foto.lalo -->
+                            <input type="password" id="admin-pass" placeholder="Escribe tu clave aquí..." required>
+                        </div>
+                        <button type="submit" class="btn-upload">Desbloquear Mi Panel</button>
+                    </form>
+                </div>
+
+                <!-- PASO B: Panel Interno del Autor (Subida y Generador de Código) -->
+                <div id="dashboard-autor" class="admin-view view-dashboard">
+                    <div class="admin-header">
+                        <span class="lock-badge active-badge">⚡ MODO AUTOR ACTIVO</span>
+                        <h2>Gestión de Carga & Generador de Códigos</h2>
+                        <p>Sube fotos de clientes o añade nuevas fotos de referencia al portafolio público.</p>
+                    </div>
+                    
+                    <!-- Pestaña 1: Subir Fotos de Cliente y Generar Código -->
+                    <div class="author-section-box">
+                        <h3 class="author-box-title">📂 Subir Sesión de Cliente (Calidad Exacta)</h3>
+                        <form class="upload-form" action="#codigo-generado-exito" method="get">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="upload-client">Nombre del Cliente</label>
+                                    <input type="text" id="upload-client" placeholder="Ej. Camila Andrés" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="assign-code">Código Asignado (Dáselo al cliente)</label>
+                                    <input type="text" id="assign-code" value="LALO-2026-CAMILA" required>
+                                </div>
+                            </div>
+
+                            <div class="file-drop-area">
+                                <input type="file" id="photo-upload" multiple accept="image/*,.raw,.cr2,.nef,.arw,.tiff" required>
+                                <div class="file-msg">
+                                    <div class="upload-icon-box">⬆</div>
+                                    <strong>Arrastra aquí las fotos originales del cliente</strong>
+                                    <span>Resolución y calidad de cámara intactas</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-upload">Generar Código y Publicar Sesión</button>
+                        </form>
+                    </div>
+
+                    <!-- Pestaña 2: Subir Fotos de Referencia al Portafolio Público -->
+                    <div class="author-section-box" style="margin-top: 3rem;">
+                        <h3 class="author-box-title">✨ Agregar Foto de Referencia (Portafolio Público)</h3>
+                        <form class="upload-form" action="#" method="post" enctype="multipart/form-data">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="ref-title">Título del Trabajo / Servicio</label>
+                                    <input type="text" id="ref-title" placeholder="Ej. Fotografía Publicitaria Gourmet" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="ref-cat">Categoría</label>
+                                    <input type="text" id="ref-cat" placeholder="Ej. Gastronomía & Comercial" required>
+                                </div>
+                            </div>
+
+                            <div class="file-drop-area">
+                                <input type="file" id="ref-upload" accept="image/*" required>
+                                <div class="file-msg">
+                                    <div class="upload-icon-box" style="background: linear-gradient(135deg, var(--yellow), var(--magenta));">🖼</div>
+                                    <strong>Sube tu foto de muestra o referencia</strong>
+                                    <span>Para atraer nuevos clientes en la página principal</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-upload" style="background: linear-gradient(90deg, var(--yellow), var(--cyan)); color: #0a0a0d;">Publicar en Portafolio Público</button>
+                        </form>
+                    </div>
+
+                    <div class="dashboard-actions" style="margin-top: 2rem;">
+                        <a href="#area-autor" class="btn-lock-again">🔒 Bloquear Panel / Cerrar Sesión Segura</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PIE DE PÁGINA CON FRASE MOTIVACIONAL Y BOTÓN DE WHATSAPP -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="brand-logo footer-brand">
+                <div class="brand-main">
+                    <span class="l-white">Lalo</span><span class="l-magenta">.</span><span class="l-cyan">c</span><span class="l-magenta">o</span><span class="l-yellow">m</span>
+                </div>
+                <span class="brand-sub">A G E N C I A &nbsp; P U B L I C I T A R I A</span>
+            </div>
+
+            <blockquote class="motivational-quote">
+                "La verdadera fotografía no busca el aplauso fácil, sino detener el tiempo con absoluta nitidez y convertir cada instante en un legado inolvidable."
+            </blockquote>
+
+            <!-- Botón de WhatsApp en Footer con número +57 3117053670 -->
+            <div class="footer-contact-wrapper">
+                <a href="https://wa.me/573117053670?text=Hola%20Lalo.com,%20me%20gustaría%20obtener%20información%20sobre%20sus%20servicios%20de%20fotografía%20y%20publicidad." class="btn-whatsapp-footer" target="_blank" rel="noopener noreferrer">
+                    <svg viewBox="0 0 32 32" width="22" height="22" fill="currentColor">
+                        <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.958A15.9 15.9 0 0 0 16.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.31 22.6c-.39 1.1-1.932 2.014-3.166 2.28-.846.18-1.95.324-5.668-1.218-4.762-1.972-7.826-6.81-8.064-7.126-.23-.316-1.926-2.564-1.926-4.89 0-2.326 1.218-3.47 1.65-3.944.432-.474.944-.592 1.258-.592.314 0 .628.004.902.016.29.014.678-.11 1.06.808.39.944 1.334 3.26 1.452 3.496.118.236.196.512.04.828-.158.316-.236.512-.472.788-.236.276-.496.616-.708.828-.236.236-.482.492-.206.966.276.474 1.226 2.022 2.632 3.276 1.808 1.612 3.332 2.112 3.804 2.348.472.236.748.196 1.024-.118.276-.316 1.18-1.378 1.494-1.852.314-.474.628-.394 1.06-.236.432.158 2.752 1.298 3.224 1.534.472.236.786.354.904.552.118.196.118 1.142-.272 2.242z"/>
+                    </svg>
+                    <span>Contáctanos por WhatsApp (+57 311 705 3670)</span>
+                </a>
+            </div>
+
+            <div class="cmyk-line"></div>
+            <p class="copyright">&copy; 2026 Lalo.com Agencia Publicitaria • Todos los derechos reservados</p>
+        </div>
+    </footer>
+
+    <!-- BOTÓN FLOTANTE DE WHATSAPP (Asegurado y funcional) -->
+    <a href="https://wa.me/573117053670?text=Hola%20Lalo.com,%20me%20gustaría%20obtener%20información%20sobre%20sus%20servicios%20de%20fotografía%20y%20publicidad." class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+        <svg viewBox="0 0 32 32" width="30" height="30" fill="currentColor">
+            <path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.128 6.744 3.046 9.378L1.054 31.29l6.118-1.958A15.9 15.9 0 0 0 16.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.31 22.6c-.39 1.1-1.932 2.014-3.166 2.28-.846.18-1.95.324-5.668-1.218-4.762-1.972-7.826-6.81-8.064-7.126-.23-.316-1.926-2.564-1.926-4.89 0-2.326 1.218-3.47 1.65-3.944.432-.474.944-.592 1.258-.592.314 0 .628.004.902.016.29.014.678-.11 1.06.808.39.944 1.334 3.26 1.452 3.496.118.236.196.512.04.828-.158.316-.236.512-.472.788-.236.276-.496.616-.708.828-.236.236-.482.492-.206.966.276.474 1.226 2.022 2.632 3.276 1.808 1.612 3.332 2.112 3.804 2.348.472.236.748.196 1.024-.118.276-.316 1.18-1.378 1.494-1.852.314-.474.628-.394 1.06-.236.432.158 2.752 1.298 3.224 1.534.472.236.786.354.904.552.118.196.118 1.142-.272 2.242z"/>
+        </svg>
+        <span class="whatsapp-tooltip">¡Escríbenos por WhatsApp!</span>
+    </a>
+
+</body>
+</html>

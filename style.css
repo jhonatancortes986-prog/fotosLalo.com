@@ -1,56 +1,872 @@
-<!-- index.html -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lalo.com | Agencia Publicitaria & Fotografía Sin Compresión</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-</head>
-<body>
+/* style.css */
+:root {
+    --bg-dark: #0a0a0d;
+    --bg-card: #131318;
+    --bg-elevated: #1b1b22;
+    --cyan: #00aeef;
+    --magenta: #ec008c;
+    --yellow: #ffd200;
+    --white: #ffffff;
+    --text-main: #f5f5f7;
+    --text-muted: #a1a1aa;
+    --border-subtle: rgba(255, 255, 255, 0.09);
+    --whatsapp: #25d366;
+    --font-main: 'Montserrat', sans-serif;
+}
 
-    <header class="navbar">
-        <a href="#" class="brand-logo" aria-label="Lalo.com Agencia Publicitaria">
-            <div class="brand-main">
-                <span class="l-white">Lalo</span><span class="l-magenta">.</span><span class="l-cyan">c</span><span class="l-magenta">o</span><span class="l-yellow">m</span>
-            </div>
-            <span class="brand-sub">A G E N C I A &nbsp; P U B L I C I T A R I A</span>
-        </a>
-        <nav>
-            <a href="#galeria">Galería</a>
-            <a href="#admin" class="btn-nav">Acceso Exclusivo</a>
-        </nav>
-    </header>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    <section class="hero">
-        <div class="hero-glow glow-cyan"></div>
-        <div class="hero-glow glow-magenta"></div>
-        <div class="hero-glow glow-yellow"></div>
-        <div class="hero-content">
-            <div class="cmyk-bar">
-                <span class="dot-c"></span>
-                <span class="dot-m"></span>
-                <span class="dot-y"></span>
-                <span class="dot-k"></span>
-            </div>
-            <span class="badge">CALIDAD NATIVA • 100% SIN COMPRESIÓN</span>
-            <h1>Cada píxel conserva<br>el impacto de tu marca</h1>
-            <p>Plataforma privada de <strong>Lalo.com Agencia Publicitaria</strong>. Visualiza y descarga tus sesiones fotográficas profesionales con la resolución exacta de cámara, sin pérdida de color ni algoritmos de compresión.</p>
-            <div class="hero-actions">
-                <a href="#galeria" class="btn-primary">Ver Entregas</a>
-                <a href="#admin" class="btn-secondary">Subir Fotografías</a>
-            </div>
-        </div>
-    </section>
+html {
+    scroll-behavior: smooth;
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: var(--font-main);
+}
 
-    <section id="admin" class="admin-panel">
-        <div class="container">
-            <div class="admin-card">
-                <div class="cmyk-top-border"></div>
-                <div class="admin-header">
-                    <span class="lock-badge">🔒 PANEL PRIVADO DEL FOTÓGRAFO</span>
-                    <h2>Carga de Archivos Maestros</h2>
-                    <p>Acceso exclusivo para administración de L
+body {
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Logotipo Minimalista Gigante Lalo.com */
+.brand-logo {
+    display: inline-flex;
+    flex-direction: column;
+    text-decoration: none;
+    user-select: none;
+}
+
+.brand-main {
+    font-size: 2.3rem;
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -1px;
+}
+
+.l-white {
+    color: var(--white);
+    text-shadow: 0 3px 0 #b8b8c2, 0 6px 16px rgba(0, 0, 0, 0.7);
+}
+
+.l-cyan {
+    color: var(--cyan);
+    text-shadow: 0 3px 0 #0077a3, 0 6px 16px rgba(0, 174, 239, 0.4);
+}
+
+.l-magenta {
+    color: var(--magenta);
+    text-shadow: 0 3px 0 #a30060, 0 6px 16px rgba(236, 0, 140, 0.4);
+}
+
+.l-yellow {
+    color: var(--yellow);
+    text-shadow: 0 3px 0 #b59500, 0 6px 16px rgba(255, 210, 0, 0.4);
+}
+
+.brand-sub {
+    font-size: 0.58rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 2.5px;
+    margin-top: 6px;
+}
+
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 1.2rem 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10, 10, 13, 0.88);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-subtle);
+    z-index: 900;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.2rem;
+}
+
+.nav-links a {
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--cyan);
+}
+
+.nav-client {
+    border: 1.5px solid var(--cyan);
+    padding: 0.6rem 1.3rem;
+    border-radius: 50px;
+    background: rgba(0, 174, 239, 0.08);
+}
+
+.nav-author {
+    border: 1.5px solid var(--magenta);
+    padding: 0.6rem 1.3rem;
+    border-radius: 50px;
+    background: rgba(236, 0, 140, 0.08);
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 9rem 2rem 5rem;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 40%, #16161f 0%, var(--bg-dark) 75%);
+}
+
+.hero-glow {
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.22;
+    pointer-events: none;
+}
+
+.glow-cyan { background: var(--cyan); top: 10%; left: 12%; }
+.glow-magenta { background: var(--magenta); bottom: 10%; right: 12%; }
+.glow-yellow { background: var(--yellow); top: 45%; left: 50%; transform: translate(-50%, -50%); opacity: 0.12; }
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 880px;
+}
+
+.cmyk-bar {
+    display: inline-flex;
+    gap: 8px;
+    margin-bottom: 1.2rem;
+}
+
+.cmyk-bar span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.dot-c { background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+.dot-m { background: var(--magenta); box-shadow: 0 0 10px var(--magenta); }
+.dot-y { background: var(--yellow); box-shadow: 0 0 10px var(--yellow); }
+.dot-k { background: var(--white); box-shadow: 0 0 10px var(--white); }
+
+.badge {
+    display: inline-block;
+    padding: 0.45rem 1.3rem;
+    border: 1px solid rgba(0, 174, 239, 0.4);
+    background: rgba(0, 174, 239, 0.08);
+    color: var(--cyan);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    border-radius: 50px;
+    margin-bottom: 1.6rem;
+}
+
+.hero h1 {
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.08;
+    margin-bottom: 1.5rem;
+    letter-spacing: -1.5px;
+    background: linear-gradient(180deg, #ffffff 30%, #c8c8d4 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero p {
+    font-size: 1.08rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    max-width: 680px;
+    margin: 0 auto 2.8rem;
+}
+
+.hero p strong { color: var(--white); }
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 1rem 2.4rem;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s ease;
+    border-radius: 50px;
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    color: var(--white);
+    box-shadow: 0 10px 30px rgba(236, 0, 140, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0, 174, 239, 0.45);
+}
+
+.btn-secondary {
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    color: var(--white);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.btn-secondary:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+}
+
+/* Portafolio Público (Referencias) */
+.public-portfolio {
+    padding: 7rem 0;
+    background: #0c0c10;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 4.5rem;
+}
+
+.subtitle-cmyk {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 3.5px;
+    color: var(--magenta);
+    display: block;
+    margin-bottom: 0.6rem;
+}
+
+.section-title h2 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    margin-bottom: 0.6rem;
+}
+
+.section-title p {
+    color: var(--text-muted);
+    font-size: 0.98rem;
+}
+
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.2rem;
+}
+
+.portfolio-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.35s ease, border-color 0.35s ease;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-6px);
+    border-color: var(--cyan);
+}
+
+.portfolio-img {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+}
+
+.portfolio-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.portfolio-item:hover .portfolio-img img {
+    transform: scale(1.04);
+}
+
+.tag-cat {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background: rgba(10, 10, 13, 0.85);
+    backdrop-filter: blur(8px);
+    color: var(--yellow);
+    border: 1px solid rgba(255, 210, 0, 0.3);
+    padding: 0.35rem 0.8rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 6px;
+}
+
+.portfolio-desc {
+    padding: 1.8rem;
+}
+
+.portfolio-desc h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+}
+
+.portfolio-desc p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Área de Clientes (Código) */
+.client-access-section {
+    padding: 7rem 0;
+    background: #09090c;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.access-card {
+    max-width: 680px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    padding: 3.5rem;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+    position: relative;
+    overflow: hidden;
+}
+
+.cmyk-top-border {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--white) 0%, var(--cyan) 35%, var(--magenta) 70%, var(--yellow) 100%);
+}
+
+.access-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.badge-client {
+    display: inline-block;
+    background: rgba(0, 174, 239, 0.12);
+    border: 1px solid rgba(0, 174, 239, 0.35);
+    color: var(--cyan);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 0.4rem 1.1rem;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+}
+
+.access-header h2 {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: var(--white);
+}
+
+.access-header p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+}
+
+.code-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--cyan);
+}
+
+.input-group input {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    padding: 1rem 1.2rem;
+    color: var(--white);
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(0, 174, 239, 0.15);
+}
+
+.btn-client-access {
+    padding: 1.15rem;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    color: var(--white);
+    border: none;
+    font-family: var(--font-main);
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-client-access:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 174, 239, 0.4);
+}
+
+/* Galería Privada del Cliente */
+.client-gallery-section {
+    display: none;
+    padding: 7rem 0;
+    background: #0b0b0f;
+    border-top: 1px solid var(--border-subtle);
+}
+
+#galeria-cliente:target {
+    display: block;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2.2rem;
+    margin-bottom: 3rem;
+}
+
+.photo-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.35s ease, border-color 0.35s ease;
+}
+
+.photo-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--cyan);
+}
+
+.photo-wrapper {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #050507;
+}
+
+.photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+
+.photo-card:hover .photo-wrapper img {
+    transform: scale(1.04);
+}
+
+.photo-specs {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.spec-res, .spec-tag {
+    background: rgba(10, 10, 13, 0.82);
+    backdrop-filter: blur(8px);
+    padding: 0.35rem 0.7rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    border-radius: 6px;
+}
+
+.spec-res { color: var(--white); border: 1px solid rgba(255,255,255,0.15); }
+.spec-tag { color: var(--yellow); border: 1px solid rgba(255,210,0,0.4); }
+
+.photo-info {
+    padding: 1.4rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.photo-info h3 { font-size: 1.1rem; font-weight: 800; color: var(--white); }
+.photo-info p { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+.btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.05rem;
+    background: rgba(0, 174, 239, 0.12);
+    border: 1.5px solid var(--cyan);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.74rem;
+    font-weight: 700;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    background: var(--cyan);
+    color: #0a0a0d;
+}
+
+.text-center-action {
+    text-align: center;
+}
+
+/* 3. Zona de Autor */
+.admin-panel {
+    padding: 7rem 0;
+    background: #0d0d12;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.admin-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    padding: 3.5rem;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-view { display: none; }
+.view-login { display: block; }
+
+#area-autor:target .view-login { display: block; }
+#area-autor:target .view-dashboard { display: none; }
+
+.admin-panel:has(:target) .view-login { display: none; }
+.admin-panel:has(:target) .view-dashboard { display: block; }
+
+#dashboard-autor:target { display: block; }
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 2.4rem;
+}
+
+.lock-badge {
+    display: inline-block;
+    background: rgba(255, 210, 0, 0.12);
+    border: 1px solid rgba(255, 210, 0, 0.35);
+    color: var(--yellow);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 0.35rem 1rem;
+    border-radius: 50px;
+    margin-bottom: 0.9rem;
+}
+
+.active-badge {
+    background: rgba(0, 174, 239, 0.12);
+    border: 1px solid rgba(0, 174, 239, 0.35);
+    color: var(--cyan);
+}
+
+.admin-header h2 { font-size: 2rem; font-weight: 800; color: var(--white); }
+.admin-header p { font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem; }
+
+.author-section-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    padding: 2rem;
+    border-radius: 12px;
+}
+
+.author-box-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--yellow);
+    margin-bottom: 1.2rem;
+    letter-spacing: 0.5px;
+}
+
+.upload-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+}
+
+.file-drop-area {
+    position: relative;
+    border: 2px dashed rgba(0, 174, 239, 0.45);
+    background: rgba(0, 174, 239, 0.03);
+    border-radius: 10px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.file-drop-area:hover {
+    background: rgba(236, 0, 140, 0.05);
+    border-color: var(--magenta);
+}
+
+.file-drop-area input[type="file"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.file-msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    pointer-events: none;
+}
+
+.upload-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--magenta));
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+}
+
+.file-msg strong { font-weight: 700; font-size: 0.95rem; color: var(--white); }
+.file-msg span { font-size: 0.78rem; color: var(--text-muted); }
+
+.btn-upload {
+    padding: 1.1rem;
+    background: linear-gradient(90deg, var(--cyan), var(--magenta));
+    color: var(--white);
+    border: none;
+    font-family: var(--font-main);
+    font-weight: 800;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    display: block;
+    width: 100%;
+    text-decoration: none;
+}
+
+.btn-upload:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(236, 0, 140, 0.35);
+}
+
+.dashboard-actions {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-lock-again {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+}
+
+.btn-lock-again:hover { color: var(--magenta); }
+
+/* Footer con Frase Motivacional y Botón de WhatsApp */
+.footer {
+    background: #060609;
+    border-top: 1px solid var(--border-subtle);
+    padding: 5.5rem 0 3.5rem;
+    text-align: center;
+}
+
+.footer-content { max-width: 780px; }
+.footer-brand { margin-bottom: 2rem; align-items: center; }
+
+.motivational-quote {
+    font-size: 1.3rem;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+}
+
+.footer-contact-wrapper {
+    margin-bottom: 2.5rem;
+}
+
+.btn-whatsapp-footer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background-color: var(--whatsapp);
+    color: #ffffff;
+    padding: 0.9rem 2rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+    transition: all 0.3s ease;
+}
+
+.btn-whatsapp-footer:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(37, 211, 102, 0.5);
+    filter: brightness(1.05);
+}
+
+.cmyk-line {
+    width: 140px;
+    height: 4px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--white), var(--cyan), var(--magenta), var(--yellow));
+    margin: 0 auto 1.8rem;
+}
+
+.copyright {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+/* Botón Flotante de WhatsApp */
+.whatsapp-float {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 64px;
+    height: 64px;
+    background-color: var(--whatsapp);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5);
+    z-index: 9999;
+    text-decoration: none;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.12);
+    box-shadow: 0 15px 38px rgba(37, 211, 102, 0.7);
+}
+
+.whatsapp-tooltip {
+    position: absolute;
+    right: 78px;
+    background: var(--bg-elevated);
+    color: var(--white);
+    border: 1px solid rgba(37, 211, 102, 0.4);
+    padding: 0.6rem 1.1rem;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+.whatsapp-float:hover .whatsapp-tooltip {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar { padding: 1rem 1.5rem; }
+    .brand-main { font-size: 1.75rem; }
+    .nav-links a:not(.nav-client):not(.nav-author) { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .access-card, .admin-card { padding: 2.2rem 1.4rem; }
+    .whatsapp-float { bottom: 1.4rem; right: 1.4rem; width: 56px; height: 56px; }
+}
