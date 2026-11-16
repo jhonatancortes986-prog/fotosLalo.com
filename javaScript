@@ -1,0 +1,152 @@
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
+
+const app = express();
+const PORT = 3000;
+const ADMIN_PASSWORD = 'Foto.lalo';
+
+// Crear carpetas necesarias si no existen
+const uploadsDir = path.join(__dirname, 'uploads');
+const portfolioDir = path.join(uploadsDir, 'portafolio');
+const clientsDir = path.join(uploadsDir, 'clientes');
+const dbFile = path.join(__dirname, 'database.json');
+
+[uploadsDir, portfolioDir, clientsDir].forEach(dir => {
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+});
+
+// Inicializar base de datos local JSON
+if (!fs.existsSync(dbFile)) {
+    fs.writeFileSync(dbFile, JSON.stringify({ portafolio: [], clientes: {} }, null, 2));
+}
+
+const readDB = () => JSON.parse(fs.readFileSync(dbFile, 'utf8'));
+const writeDB = (data) => fs.writeFileSync(dbFile, JSON.stringify(data, null, 2));
+
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(uploadsDir));
+
+// Configuración de Multer: Guarda el archivo binariamente INTACTO (sin recomprimir)
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const tipo = req.headers['x-upload-type'];
+        if (tipo === 'portafolio') {
+            cb(null, portfolioDir);
+        } else {
+            cb(null, clientsDir);
+        }
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+// Límite de 100MB por foto para soportar archivos pesados de cámara profesional
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 100 * 1024 * 1024 } 
+});
+
+// Middleware de autenticación del autor
+const verificarAutor = (req, res, next) => {
+    const password = req.headers['x-admin-password'];
+    if (password === ADMIN_PASSWORD) {
+        next();
+    } else {
+        res.status(401).json({ error: 'Contraseña de autor incorrecta.' });
+    }
+};
+
+// 1. Verificar login de autor
+app.post('/api/login', (req, res) => {
+    const { password } = req.body;
+    if (password === ADMIN_PASSWORD) {
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ success: false, message: 'Clave incorrecta.' });
+    }
+});
+
+// 2. Obtener galería pública de referencia (Portafolio)
+app.get('/api/portafolio', (req, res) => {
+    const db = readDB();
+    res.json(db.portafolio);
+});
+
+// 3. Subir fotos al portafolio público (Solo Autor)
+app.post('/api/upload/portafolio', verificarAutor, upload.array('fotos', 30), (req, res) => {
+    const db = readDB();
+    const categoria = req.body.categoria || 'Editorial';
+    
+    const nuevasFotos = req.files.map(file => ({
+        id: crypto.randomUUID(),
+        filename: file.filename,
+        originalName: file.originalname,
+        url: `/uploads/portafolio/${file.filename}`,
+        categoria
+    }));
+
+    db.portafolio.unshift(...nuevasFotos);
+    writeDB(db);
+    res.json({ success: true, fotos: nuevasFotos });
+});
+
+// 4. Subir sesión privada de cliente y generar código único (Solo Autor)
+app.post('/api/upload/cliente', verificarAutor, upload.array('fotos', 100), (req, res) => {
+    const db = readDB();
+    const nombreCliente = req.body.nombreCliente || 'Cliente';
+    
+    // Generar código único limpio (Ej: LALO-8492)
+    const randomCode = 'LALO-' + Math.floor(1000 + Math.random() * 9000);
+
+    const fotosCliente = req.files.map(file => ({
+        filename: file.filename,
+        originalName: file.originalname,
+        sizeMB: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
+        url: `/uploads/clientes/${file.filename}`
+    }));
+
+    db.clientes[randomCode] = {
+        cliente: nombreCliente,
+        fecha: new Date().toLocaleDateString('es-CO'),
+        fotos: fotosCliente
+    };
+
+    writeDB(db);
+    res.json({ success: true, codigo: randomCode, total: fotosCliente.length });
+});
+
+// 5. Consultar galería privada mediante código de cliente
+app.get('/api/cliente/:codigo', (req, res) => {
+    const codigo = req.params.codigo.trim().toUpperCase();
+    const db = readDB();
+    const sesion = db.clientes[codigo];
+
+    if (!sesion) {
+        return res.status(404).json({ error: 'Código inválido o sesión no encontrada.' });
+    }
+    res.json(sesion);
+});
+
+// 6. Descarga directa forzada en calidad original exacta (binario puro)
+app.get('/api/descargar/:tipo/:filename', (req, res) => {
+    const { tipo, filename } = req.params;
+    const safeFilename = path.basename(filename);
+    const folder = tipo === 'portafolio' ? portfolioDir : clientsDir;
+    const filePath = path.join(folder, safeFilename);
+
+    if (fs.existsSync(filePath)) {
+        res.download(filePath, safeFilename);
+    } else {
+        res.status(404).send('Archivo no encontrado.');
+    }
+});
+
+app.listen(PORT, () => {
+    console.log(`Servidor LALO.COM ejecutándose en http://localhost:${PORT}`);
+});

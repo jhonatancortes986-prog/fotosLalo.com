@@ -1,0 +1,7 @@
+lalo-fotografia/
+├── package.json
+├── server.js
+├── uploads/             <-- (Se creará automáticamente para guardar tus fotos originales)
+└── public/
+    ├── index.html
+    └── style.css
