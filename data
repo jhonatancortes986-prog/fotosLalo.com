@@ -1,6 +1,6 @@
 {
-  "name": "lalo-com-plataforma",
-  "version": "1.0.0",
+  "name": "lalo-com-studio",
+  "version": "2.0.0",
   "description": "Plataforma de entrega fotografica sin perdida de calidad - Lalo.com",
   "main": "server.js",
   "scripts": {
